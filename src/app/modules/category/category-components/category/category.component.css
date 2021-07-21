@@ -1,0 +1,13 @@
+.category-list {
+  display: block;
+  width: 300px;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.category-form {
+  font-size: 12px;
+  padding-left: 50px;
+}

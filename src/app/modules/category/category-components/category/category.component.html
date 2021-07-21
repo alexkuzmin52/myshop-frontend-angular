@@ -1,0 +1,188 @@
+<p>category works!</p>
+<mat-toolbar color="primary">
+  <span style="color: yellow">Категории</span>
+  <button mat-button (click)="onHome()">Home</button>
+
+  <button mat-button [matMenuTriggerFor]="createCategoryMenu">Создать</button>
+  <mat-menu #createCategoryMenu="matMenu">
+    <button mat-menu-item (click)="onCreateCategory()">Уровень 1</button>
+    <button mat-menu-item (click)="onCreateSubCategory()">Уровень 2</button>
+    <button mat-menu-item (click)="onCreateSubSubCategory()">Уровень 3</button>
+  </mat-menu>
+  <button mat-button [matMenuTriggerFor]="addCategoryMenu">Добавить</button>
+  <mat-menu #addCategoryMenu="matMenu">
+    <button mat-menu-item (click)="onAddSubCategoryToCategory()">Уровень 2</button>
+    <button mat-menu-item (click)="onAddSubSubCategoryToSubCategory()">Уровень 3</button>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="beforeMenu">Before</button>
+  <mat-menu #beforeMenu="matMenu" yPosition="below">
+    <button mat-menu-item>Item 1</button>
+    <button mat-menu-item>Item 2</button>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="afterMenu">After</button>
+  <mat-menu #afterMenu="matMenu" yPosition="below">
+    <button mat-menu-item>Item 1</button>
+    <button mat-menu-item>Item 2</button>
+  </mat-menu>
+
+
+
+</mat-toolbar>
+
+<div class="container">
+  <div class="category-list">
+    <div *ngFor="let cat of categories">
+      <div>
+        <input type="checkbox" (change)="onChangeCategoryCheckBox(cat, $event)" [hidden]="cat.isSubCategories">
+        <button mat-button>
+          <span style="font-size: medium; color: blue">{{cat.title}}</span>
+        </button>
+      </div>
+      <div *ngIf="cat.isChecked">
+        <div *ngFor="let sub of cat.subCategories">
+          <div style="padding-left: 5px">
+            <input type="checkbox" (change)="onChangeSubCategoryCheckBox(sub, $event)"
+                   [hidden]="sub.isSubSubCategories">
+            <button mat-button>
+              <span style="padding-left: 0;font-style: italic; color: blue">{{sub.title}}</span>
+            </button>
+
+            <div *ngIf="sub.isChecked">
+              <div *ngFor="let sub_sub of sub.subSubCategories">
+                <span style="padding-left: 5px;font-style: italic; color: blue">{{sub_sub.title}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <fieldset *ngIf="categoryActive=='create category'" class="category-form">
+      <legend>Create Category</legend>
+      <form [formGroup]="categoryForm">
+        <div *ngIf="categoryActive=='create category'">
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Enter title</mat-label>
+              <input matInput placeholder="title" formControlName="title" required>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Enter url</mat-label>
+              <input matInput placeholder="url" formControlName="overview_url" required>
+            </mat-form-field>
+          </div>
+        </div>
+        <div>
+          <input type="submit" value="Submit" (click)="onSubmitCategory(categoryForm)">
+          <input type="reset" value="Reset">
+          <input type="button" value="Cancel" (click)="onCancelCategoryForms()">
+        </div>
+      </form>
+    </fieldset>
+    <fieldset *ngIf="categoryActive=='create subCategory'" class="category-form">
+      <legend>Create subCategory</legend>
+      <form [formGroup]="subCategoryForm">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Enter title</mat-label>
+            <input matInput placeholder="title" formControlName="title" required>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Enter url</mat-label>
+            <input matInput placeholder="url" formControlName="overview_url" required>
+          </mat-form-field>
+        </div>
+        <div>
+          <input type="submit" value="Submit" (click)="onSubmitSubCategory(subCategoryForm)">
+          <input type="reset" value="Reset">
+          <input type="button" value="Cancel" (click)="onCancelCategoryForms()">
+        </div>
+      </form>
+    </fieldset>
+    <fieldset *ngIf="categoryActive=='create subSubCategory'" class="category-form">
+      <legend>Create subSubCategory</legend>
+      <form [formGroup]="subSubCategoryForm">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Enter title</mat-label>
+            <input matInput placeholder="title" formControlName="title" required>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Enter url</mat-label>
+            <input matInput placeholder="url" formControlName="overview_url" required>
+          </mat-form-field>
+        </div>
+        <div>
+          <input type="submit" value="Submit" (click)="onSubmitSubSubCategory(subSubCategoryForm)">
+          <input type="reset" value="Reset">
+          <input type="button" value="Cancel" (click)="onCancelCategoryForms()">
+        </div>
+      </form>
+    </fieldset>
+    <fieldset *ngIf="categoryActive=='add subCategory to Category'" class="category-form">
+      <form [formGroup]="addSubCategoryForm">
+        <legend>Add SubCategory to Category</legend>
+        <mat-form-field appearance="fill">
+          <mat-label>Selected Category</mat-label>
+          <mat-select [(value)]="selectedCategory" formControlName="idCat">
+            <mat-option *ngFor="let category of categories" [value]="category.id">
+              {{category.title}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="fill">
+          <mat-label>Selected subCategory</mat-label>
+          <mat-select [(value)]="selectedSubCategory" formControlName="id">
+            <mat-option *ngFor="let subCategory of subCategories" [value]="subCategory.id">
+              {{subCategory.title}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div>
+          <input type="submit" value="Submit" (click)="onSubmitAddSubCategory(addSubCategoryForm)">
+          <input type="reset" value="Reset" (click)="onResetAddSubCategoryToCategory()">
+          <input type="button" value="Cancel" (click)="onCancelAddSubCategoryToCategory()">
+        </div>
+      </form>
+    </fieldset>
+    <fieldset *ngIf="categoryActive=='add subSubCategory to subCategory'" class="category-form">
+      <form [formGroup]="addSubSubCategoryForm">
+        <legend>Add SubSubCategory to Category</legend>
+        <mat-form-field appearance="fill">
+          <mat-label>Selected SubCategory</mat-label>
+          <mat-select [(value)]="selectedSubCategory" formControlName="idSubCat">
+            <mat-option *ngFor="let subCategory of subCategories" [value]="subCategory.id">
+              {{subCategory.title}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="fill">
+          <mat-label>Selected subSubCategory</mat-label>
+          <mat-select [(value)]="selectedSubSubCategory" formControlName="id">
+            <mat-option *ngFor="let subSubCategory of subSubCategories" [value]="subSubCategory.id">
+              {{subSubCategory.title}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div>
+          <input type="submit" value="Submit" (click)="onSubmitAddSubCategory(addSubCategoryForm)">
+          <input type="reset" value="Reset" (click)="onResetAddSubCategoryToCategory()">
+          <input type="button" value="Cancel" (click)="onCancelAddSubCategoryToCategory()">
+        </div>
+      </form>
+    </fieldset>
+  </div>
+
+
+</div>
