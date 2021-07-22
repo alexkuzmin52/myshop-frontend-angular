@@ -28,7 +28,6 @@
   </mat-menu>
 
 
-
 </mat-toolbar>
 
 <div class="container">
@@ -36,7 +35,7 @@
     <div *ngFor="let cat of categories">
       <div>
         <input type="checkbox" (change)="onChangeCategoryCheckBox(cat, $event)" [hidden]="cat.isSubCategories">
-        <button mat-button>
+        <button mat-button (click)="onClickSelectedCategory(cat)">
           <span style="font-size: medium; color: blue">{{cat.title}}</span>
         </button>
       </div>
@@ -182,6 +181,57 @@
         </div>
       </form>
     </fieldset>
+  </div>
+  <div *ngIf="categoryActive=='get selected category'">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <!--        <div mat-card-avatar class="example-header-image"></div>-->
+        <mat-card-title>{{selectedCategory.title}}</mat-card-title>
+<!--        <mat-card-subtitle>Dog Breed</mat-card-subtitle>-->
+      </mat-card-header>
+      <img mat-card-image [src]="selectedCategory.logoURL" alt="Photo of category">
+      <mat-card-content>
+        <form [formGroup]="addCategoryPhoto">
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>title</mat-label>
+              <input matInput formControlName="title" required>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>url</mat-label>
+              <input matInput formControlName="overview_url" required>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>logo</mat-label>
+              <input matInput formControlName="logo">
+            </mat-form-field>
+          </div>
+          <div *ngIf="flagAddPhoto">
+            <input type="file" multiple (change)="onChangeFile($event)">
+          </div>
+        </form>
+<!--        <p>-->
+<!--          The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.-->
+<!--          A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally-->
+<!--          bred for hunting.-->
+<!--        </p>-->
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" class="resize-button">Edit</button>
+        <button mat-raised-button color="primary" class="resize-button">Delete</button>
+        <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
+        <button mat-raised-button type="submit" color="primary" class="resize-button" (click)="onSubmitPhoto(addCategoryPhoto)">Submit</button>
+        <button mat-raised-button color="primary" class="resize-button" (click)="onRefresh()">Refresh</button>
+      </mat-card-actions>
+    </mat-card>
+<!--    <div>-->
+<!--      <button mat-raised-button color="primary">LIKE</button>-->
+
+<!--    </div>-->
   </div>
 
 

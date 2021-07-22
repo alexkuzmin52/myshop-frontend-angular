@@ -11,5 +11,8 @@ export enum CategoryActionEnum {
   UPDATE_CATEGORY = 'update category',
   UPDATE_SUB_CATEGORY = 'update subCategory',
   UPDATE_SUB_SUB_CATEGORY = 'update subSubCategory',
-  ADD_LOGO = 'add logo'
+  ADD_LOGO = 'add logo',
+  GET_SELECTED_CATEGORY = 'get selected category',
+  GET_SELECTED_SUB_CATEGORY = 'get selected subCategory',
+  GET_SELECTED_SUB_SUB_CATEGORY = 'get selected subSubCategory'
 }

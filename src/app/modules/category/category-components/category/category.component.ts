@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {ICategory, ISubCategory, ISubSubCategory} from "../../category-models";
 import {CategoryActionEnum, RegexEnum} from "../../constants";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CategoryService} from "../../category-services";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-category',
@@ -16,16 +17,25 @@ export class CategoryComponent implements OnInit {
   subSubCategories: ISubSubCategory[] = [];
 
   categoryActive: CategoryActionEnum;
+  flagAddPhoto = false;
 
-  selectedCategory: number = 0;
-  selectedSubCategory: number = 0;
-  selectedSubSubCategory: number = 0;
+  // selectedCategory: number = 0;
+  // selectedSubCategory: number = 0;
+  // selectedSubSubCategory: number = 0;
+
+  selectedCategory: ICategory | any;
+  selectedSubCategory: any;
+  selectedSubSubCategory: any;
 
   categoryForm: FormGroup;
   subCategoryForm: FormGroup;
   subSubCategoryForm: FormGroup;
   addSubCategoryForm: FormGroup;
   addSubSubCategoryForm: FormGroup;
+  addCategoryPhoto: FormGroup;
+  addSubCategoryPhoto: FormGroup;
+  addSubSubCategoryPhoto: FormGroup;
+
   //TODO token from local storage
   token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTk2MDcxNjUsImV4cCI6MTYyODI0NzE2NX0.hVS9Esd4mVw8gHe97oUJTBd9VdyBCmddqJ1afHuS-Sk';
 
@@ -33,7 +43,8 @@ export class CategoryComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private fb: FormBuilder,
               private router: Router,
-              private categoryService: CategoryService) {
+              private categoryService: CategoryService,
+              private sanitizer: DomSanitizer) {
     this.categoryActive = CategoryActionEnum.NOT_ACTIONS;
     this.categories = activatedRoute.snapshot.data.data[0];
     this.subCategories = activatedRoute.snapshot.data.data[1];
@@ -73,6 +84,22 @@ export class CategoryComponent implements OnInit {
     this.addSubSubCategoryForm = fb.group({
       idSubCat: ['', [Validators.required]],
       id: ['', [Validators.required]]
+    })
+
+    this.addCategoryPhoto = fb.group({
+      title: ['', [Validators.required, Validators.pattern(RegexEnum.title_categories)]],
+      overview_url: ['', [Validators.required, Validators.pattern(RegexEnum.url)]],
+      logo: ['']
+    })
+    this.addSubCategoryPhoto = fb.group({
+      title: ['', [Validators.required, Validators.pattern(RegexEnum.title_categories)]],
+      overview_url: ['', [Validators.required, Validators.pattern(RegexEnum.url)]],
+      logo: ['']
+    })
+    this.addSubSubCategoryPhoto = fb.group({
+      title: ['', [Validators.required, Validators.pattern(RegexEnum.title_categories)]],
+      overview_url: ['', [Validators.required, Validators.pattern(RegexEnum.url)]],
+      logo: ['']
     })
 
   }
@@ -139,14 +166,16 @@ export class CategoryComponent implements OnInit {
   }
 
   onAddLogo() {
-    this.categoryActive = CategoryActionEnum.ADD_LOGO;
-
+    this.flagAddPhoto = true;
   }
 
   onChangeFile(event: any) {
     let fileList: FileList = event.target.files;
     if (fileList.length) {
-      this.categoryForm.controls['logo'].patchValue(fileList[0].name)
+      this.addCategoryPhoto.controls['logo'].setValue(fileList[0].name);
+      this.categoryService.addFileCategory(fileList[0], this.selectedCategory.id, this.token).subscribe(res => {
+        this.flagAddPhoto = false;
+      })
     }
   }
 
@@ -181,4 +210,29 @@ export class CategoryComponent implements OnInit {
     this.selectedSubCategory = 0;
   }
 
+  onClickSelectedCategory(cat: ICategory) {
+    this.selectedCategory = cat;
+    this.addCategoryPhoto.controls['title'].setValue(this.selectedCategory.title)
+    this.addCategoryPhoto.controls['overview_url'].setValue(this.selectedCategory.overview_url)
+    this.addCategoryPhoto.controls['logo'].setValue(this.selectedCategory.logo)
+    this.categoryActive = CategoryActionEnum.GET_SELECTED_CATEGORY;
+    console.log(this.selectedCategory);
+    this.categoryService.getCategoryPhoto(this.selectedCategory.id)
+      .subscribe(res => {
+        const url = URL.createObjectURL(res);
+        this.selectedCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      })
+  }
+
+  onSubmitPhoto(addCategoryPhoto: FormGroup) {
+    console.log(addCategoryPhoto.value);
+  }
+
+  onRefresh() {
+    this.categoryService.getCategoryPhoto(this.selectedCategory.id)
+      .subscribe(res => {
+        const url = URL.createObjectURL(res);
+        this.selectedCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      })
+  }
 }

@@ -10,7 +10,6 @@ import {ICategory, ISubCategory, ISubSubCategory} from "../category-models";
   providedIn: 'root'
 })
 export class CategoryService {
-  URL: string = 'http://localhost:3000/category'
 
   constructor(private http: HttpClient) {
   }
@@ -27,29 +26,42 @@ export class CategoryService {
     return this.http.get<ISubSubCategory[]>(CategoryUrlEnum.SUB_SUB_CATEGORY)
   }
 
-  createCategory = (category: ICategory, token:string):Observable<any> => {
-    const myHeaders= new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
-    return this.http.post(CategoryUrlEnum.CATEGORY, category, {headers:myHeaders})
+  createCategory = (category: ICategory, token: string): Observable<any> => {
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+    return this.http.post(CategoryUrlEnum.CATEGORY, category, {headers: myHeaders})
   }
 
-  createSubCategory = (subCategory: ISubCategory, token: string):Observable<any> => {
-    const myHeaders= new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
-    return this.http.post(CategoryUrlEnum.SUB_CATEGORY, subCategory, {headers:myHeaders})
+  createSubCategory = (subCategory: ISubCategory, token: string): Observable<any> => {
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+    return this.http.post(CategoryUrlEnum.SUB_CATEGORY, subCategory, {headers: myHeaders})
 
   }
 
-  createSubSubCategory = (subSubCategory: ISubSubCategory, token: string):Observable<any> => {
-    const myHeaders= new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
-    return this.http.post(CategoryUrlEnum.SUB_SUB_CATEGORY, subSubCategory, {headers:myHeaders})
+  createSubSubCategory = (subSubCategory: ISubSubCategory, token: string): Observable<any> => {
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+    return this.http.post(CategoryUrlEnum.SUB_SUB_CATEGORY, subSubCategory, {headers: myHeaders})
 
   }
 
   // addSubCategoryToCategory = (params: {}) => {
 
   // }
-  addSubCategoryToCategory = (param: any, token: string):Observable<any> =>  {
-    const myHeaders= new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
-    return this.http.put(CategoryUrlEnum.ADD_SUB_CATEGORY_TO_CATEGORY, param, {headers:myHeaders})
+  addSubCategoryToCategory = (param: any, token: string): Observable<any> => {
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+    return this.http.put(CategoryUrlEnum.ADD_SUB_CATEGORY_TO_CATEGORY, param, {headers: myHeaders})
 
+  }
+
+  //TODO addSubSubCategoryToSubCategory
+
+  getCategoryPhoto = (categoryID: number): Observable<Blob> => {
+    return this.http.get(CategoryUrlEnum.GET_CATEGORY_PHOTO + `/${categoryID}`, {responseType: 'blob'});
+  }
+
+  addFileCategory =  (fileListElement: File, id: number, token: string): Observable<any> => {
+    const formData = new FormData();
+    formData.append('file', fileListElement);
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return  this.http.post(CategoryUrlEnum.GET_CATEGORY_PHOTO + `/${id}`, formData, {headers: myHeaders})
   }
 }

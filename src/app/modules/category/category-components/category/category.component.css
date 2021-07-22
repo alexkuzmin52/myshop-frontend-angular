@@ -11,3 +11,11 @@
   font-size: 12px;
   padding-left: 50px;
 }
+.example-card {
+  max-width: 200px;
+}
+.resize-button {
+  width: 50px!important;
+  min-width: unset!important;
+  padding: 0;
+}
