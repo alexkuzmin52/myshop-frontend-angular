@@ -12,10 +12,12 @@
   padding-left: 50px;
 }
 .example-card {
-  max-width: 200px;
+  max-width: 250px;
+  background-color: #eed8bc;
 }
 .resize-button {
   width: 50px!important;
   min-width: unset!important;
   padding: 0;
+  background-color: #cd7a3c;
 }

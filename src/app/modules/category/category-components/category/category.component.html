@@ -14,13 +14,11 @@
     <button mat-menu-item (click)="onAddSubCategoryToCategory()">Уровень 2</button>
     <button mat-menu-item (click)="onAddSubSubCategoryToSubCategory()">Уровень 3</button>
   </mat-menu>
-
   <button mat-button [matMenuTriggerFor]="beforeMenu">Before</button>
   <mat-menu #beforeMenu="matMenu" yPosition="below">
     <button mat-menu-item>Item 1</button>
     <button mat-menu-item>Item 2</button>
   </mat-menu>
-
   <button mat-button [matMenuTriggerFor]="afterMenu">After</button>
   <mat-menu #afterMenu="matMenu" yPosition="below">
     <button mat-menu-item>Item 1</button>
@@ -44,7 +42,7 @@
           <div style="padding-left: 5px">
             <input type="checkbox" (change)="onChangeSubCategoryCheckBox(sub, $event)"
                    [hidden]="sub.isSubSubCategories">
-            <button mat-button>
+            <button mat-button (click)="onClickSelectedSubCategory(sub)">
               <span style="padding-left: 0;font-style: italic; color: blue">{{sub.title}}</span>
             </button>
 
@@ -175,9 +173,9 @@
           </mat-select>
         </mat-form-field>
         <div>
-          <input type="submit" value="Submit" (click)="onSubmitAddSubCategory(addSubCategoryForm)">
-          <input type="reset" value="Reset" (click)="onResetAddSubCategoryToCategory()">
-          <input type="button" value="Cancel" (click)="onCancelAddSubCategoryToCategory()">
+          <input type="submit" value="Submit" (click)="onSubmitAddSubSubCategory(addSubSubCategoryForm)">
+          <input type="reset" value="Reset" (click)="onResetAddSubSubCategoryToCategory()">
+          <input type="button" value="Cancel" (click)="onCancelAddSubSubCategoryToCategory()">
         </div>
       </form>
     </fieldset>
@@ -224,15 +222,10 @@
         <button mat-raised-button color="primary" class="resize-button">Edit</button>
         <button mat-raised-button color="primary" class="resize-button">Delete</button>
         <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
-        <button mat-raised-button type="submit" color="primary" class="resize-button" (click)="onSubmitPhoto(addCategoryPhoto)">Submit</button>
-        <button mat-raised-button color="primary" class="resize-button" (click)="onRefresh()">Refresh</button>
+        <button mat-raised-button type="submit" color="primary" class="resize-button"
+                (click)="onSubmitPhoto(addCategoryPhoto)">Submit
+        </button>
       </mat-card-actions>
     </mat-card>
-<!--    <div>-->
-<!--      <button mat-raised-button color="primary">LIKE</button>-->
-
-<!--    </div>-->
   </div>
-
-
 </div>

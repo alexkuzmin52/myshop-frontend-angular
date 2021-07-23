@@ -114,11 +114,9 @@ export class CategoryComponent implements OnInit {
   onCreateCategory(): void {
     this.categoryActive = CategoryActionEnum.CREATE_CATEGORY;
   }
-
   onCreateSubCategory(): void {
     this.categoryActive = CategoryActionEnum.CREATE_SUB_CATEGORY;
   }
-
   onCreateSubSubCategory(): void {
     this.categoryActive = CategoryActionEnum.CREATE_SUB_SUB_CATEGORY;
   }
@@ -126,7 +124,6 @@ export class CategoryComponent implements OnInit {
   onAddSubCategoryToCategory() {
     this.categoryActive = CategoryActionEnum.ADD_SUB_CATEGORY_TO_CATEGORY;
   }
-
   onAddSubSubCategoryToSubCategory() {
     this.categoryActive = CategoryActionEnum.ADD_SUB_SUB_CATEGORY_TO_SUB_CATEGORY;
 
@@ -141,7 +138,6 @@ export class CategoryComponent implements OnInit {
         alert(`error: ${error.error.message}`);
       });
   }
-
   onSubmitSubCategory(subCategoryForm: FormGroup) {
     console.log(subCategoryForm.value);
     this.categoryService.createSubCategory(subCategoryForm.value, this.token).subscribe((res) => {
@@ -152,7 +148,6 @@ export class CategoryComponent implements OnInit {
         alert(`error: ${error.error.message}`);
       });
   }
-
   onSubmitSubSubCategory(subSubCategoryForm: FormGroup) {
     console.log(subSubCategoryForm.value);
     this.categoryService.createSubSubCategory(subSubCategoryForm.value, this.token).subscribe((res) => {
@@ -186,7 +181,6 @@ export class CategoryComponent implements OnInit {
   onChangeCategoryCheckBox(category: ICategory, event: any) {
     category.isChecked = event.target.checked;
   }
-
   onChangeSubCategoryCheckBox(subCategory: ISubCategory, event: any) {
     subCategory.isChecked = event.target.checked;
   }
@@ -198,16 +192,37 @@ export class CategoryComponent implements OnInit {
         alert(`error: ${error.error.message}`)
       })
   }
+  onSubmitAddSubSubCategory(param: FormGroup) {
+    this.categoryService.addSubSubCategoryToSubCategory(param.value, this.token).subscribe(res => {
+      },
+      error => {
+        alert(`error: ${error.error.message}`)
+      })
+
+  }
+
 
   onResetAddSubCategoryToCategory() {
     this.selectedCategory = 0;
     this.selectedSubCategory = 0;
   }
+  onResetAddSubSubCategoryToCategory() {
+    this.selectedSubCategory = 0;
+    this.selectedSubSubCategory = 0;
+
+  }
+
 
   onCancelAddSubCategoryToCategory() {
     this.categoryActive = CategoryActionEnum.NOT_ACTIONS;
     this.selectedCategory = 0;
     this.selectedSubCategory = 0;
+  }
+  onCancelAddSubSubCategoryToCategory() {
+    this.categoryActive = CategoryActionEnum.NOT_ACTIONS;
+    this.selectedSubCategory = 0;
+    this.selectedSubSubCategory = 0;
+
   }
 
   onClickSelectedCategory(cat: ICategory) {
@@ -223,16 +238,30 @@ export class CategoryComponent implements OnInit {
         this.selectedCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       })
   }
+  onClickSelectedSubCategory(sub: ISubCategory) {
+    this.selectedSubCategory = sub;
+    this.addSubCategoryPhoto.controls['title'].setValue(this.selectedSubCategory.title)
+    this.addSubCategoryPhoto.controls['overview_url'].setValue(this.selectedSubCategory.overview_url)
+    this.addSubCategoryPhoto.controls['logo'].setValue(this.selectedSubCategory.logo)
+    this.categoryActive = CategoryActionEnum.GET_SELECTED_SUB_CATEGORY;
+    console.log(this.selectedSubCategory);
+    this.categoryService.getSubCategoryPhoto(this.selectedCategory.id)
+      .subscribe(res => {
+        const url = URL.createObjectURL(res);
+        this.selectedSubCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      })
+  }
 
   onSubmitPhoto(addCategoryPhoto: FormGroup) {
     console.log(addCategoryPhoto.value);
   }
 
-  onRefresh() {
-    this.categoryService.getCategoryPhoto(this.selectedCategory.id)
-      .subscribe(res => {
-        const url = URL.createObjectURL(res);
-        this.selectedCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      })
-  }
+  // onRefresh() {
+  //   this.categoryService.getCategoryPhoto(this.selectedCategory.id)
+  //     .subscribe(res => {
+  //       const url = URL.createObjectURL(res);
+  //       this.selectedCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  //     })
+  // }
+
 }
