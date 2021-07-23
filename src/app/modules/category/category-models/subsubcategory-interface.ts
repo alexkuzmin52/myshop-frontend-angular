@@ -3,4 +3,6 @@ export interface ISubSubCategory {
   parentID: number;
   title: string;
   logo: string;
+  logoURL: string;
+
 }

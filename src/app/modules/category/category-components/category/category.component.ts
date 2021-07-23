@@ -24,8 +24,8 @@ export class CategoryComponent implements OnInit {
   // selectedSubSubCategory: number = 0;
 
   selectedCategory: ICategory | any;
-  selectedSubCategory: any;
-  selectedSubSubCategory: any;
+  selectedSubCategory: ISubCategory | any;
+  selectedSubSubCategory: ISubSubCategory | any;
 
   categoryForm: FormGroup;
   subCategoryForm: FormGroup;
@@ -164,7 +164,7 @@ export class CategoryComponent implements OnInit {
     this.flagAddPhoto = true;
   }
 
-  onChangeFile(event: any) {
+  onChangeCategoryFile(event: any) {
     let fileList: FileList = event.target.files;
     if (fileList.length) {
       this.addCategoryPhoto.controls['logo'].setValue(fileList[0].name);
@@ -172,6 +172,25 @@ export class CategoryComponent implements OnInit {
         this.flagAddPhoto = false;
       })
     }
+  }
+  onChangeSubCategoryFile(event: any) {
+    let fileList: FileList = event.target.files;
+    if (fileList.length) {
+      this.addSubCategoryPhoto.controls['logo'].setValue(fileList[0].name);
+      this.categoryService.addFileSubCategory(fileList[0], this.selectedSubCategory.id, this.token).subscribe(res => {
+        this.flagAddPhoto = false;
+      })
+    }
+  }
+  onChangeSubSubCategoryFile(event: any) {
+    let fileList: FileList = event.target.files;
+    if (fileList.length) {
+      this.addSubSubCategoryPhoto.controls['logo'].setValue(fileList[0].name);
+      this.categoryService.addFileSubSubCategory(fileList[0], this.selectedSubSubCategory.id, this.token).subscribe(res => {
+        this.flagAddPhoto = false;
+      })
+    }
+
   }
 
   onCancelCategoryForms() {
@@ -198,9 +217,7 @@ export class CategoryComponent implements OnInit {
       error => {
         alert(`error: ${error.error.message}`)
       })
-
   }
-
 
   onResetAddSubCategoryToCategory() {
     this.selectedCategory = 0;
@@ -209,9 +226,7 @@ export class CategoryComponent implements OnInit {
   onResetAddSubSubCategoryToCategory() {
     this.selectedSubCategory = 0;
     this.selectedSubSubCategory = 0;
-
   }
-
 
   onCancelAddSubCategoryToCategory() {
     this.categoryActive = CategoryActionEnum.NOT_ACTIONS;
@@ -222,7 +237,6 @@ export class CategoryComponent implements OnInit {
     this.categoryActive = CategoryActionEnum.NOT_ACTIONS;
     this.selectedSubCategory = 0;
     this.selectedSubSubCategory = 0;
-
   }
 
   onClickSelectedCategory(cat: ICategory) {
@@ -240,17 +254,32 @@ export class CategoryComponent implements OnInit {
   }
   onClickSelectedSubCategory(sub: ISubCategory) {
     this.selectedSubCategory = sub;
-    this.addSubCategoryPhoto.controls['title'].setValue(this.selectedSubCategory.title)
-    this.addSubCategoryPhoto.controls['overview_url'].setValue(this.selectedSubCategory.overview_url)
-    this.addSubCategoryPhoto.controls['logo'].setValue(this.selectedSubCategory.logo)
+    this.addSubCategoryPhoto.controls['title'].setValue(this.selectedSubCategory.title);
+    this.addSubCategoryPhoto.controls['overview_url'].setValue(this.selectedSubCategory.overview_url);
+    this.addSubCategoryPhoto.controls['logo'].setValue(this.selectedSubCategory.logo);
     this.categoryActive = CategoryActionEnum.GET_SELECTED_SUB_CATEGORY;
     console.log(this.selectedSubCategory);
-    this.categoryService.getSubCategoryPhoto(this.selectedCategory.id)
+    this.categoryService.getSubCategoryPhoto(this.selectedSubCategory.id)
       .subscribe(res => {
         const url = URL.createObjectURL(res);
         this.selectedSubCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       })
   }
+  onClickSelectedSubSubCategory(sub_sub:ISubSubCategory) {
+    this.selectedSubSubCategory = sub_sub;
+    this.addSubSubCategoryPhoto.controls['title'].setValue(this.selectedSubSubCategory.title);
+    this.addSubSubCategoryPhoto.controls['overview_url'].setValue(this.selectedSubSubCategory.overview_url);
+    this.addSubSubCategoryPhoto.controls['logo'].setValue(this.selectedSubSubCategory.logo);
+    this.categoryActive = CategoryActionEnum.GET_SELECTED_SUB_SUB_CATEGORY;
+    console.log(this.selectedSubSubCategory);
+    this.categoryService.getSubSubCategoryPhoto(this.selectedSubSubCategory.id)
+      .subscribe(res => {
+        const url = URL.createObjectURL(res);
+        this.selectedSubSubCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      })
+
+  }
+
 
   onSubmitPhoto(addCategoryPhoto: FormGroup) {
     console.log(addCategoryPhoto.value);

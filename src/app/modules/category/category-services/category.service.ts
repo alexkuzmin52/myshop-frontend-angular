@@ -61,17 +61,33 @@ export class CategoryService {
   getCategoryPhoto = (categoryID: number): Observable<Blob> => {
     return this.http.get(CategoryUrlEnum.GET_CATEGORY_PHOTO + `/${categoryID}`, {responseType: 'blob'});
   }
-  getSubCategoryPhoto =(subCategoryID: number): Observable<Blob> =>  {
+  getSubCategoryPhoto = (subCategoryID: number): Observable<Blob> => {
     return this.http.get(CategoryUrlEnum.GET_SUB_CATEGORY_PHOTO + `/${subCategoryID}`, {responseType: 'blob'});
-
+  }
+  getSubSubCategoryPhoto = (subSubCategoryID: number): Observable<Blob> => {
+    return this.http.get(CategoryUrlEnum.GET_SUB_SUB_CATEGORY_PHOTO + `/${subSubCategoryID}`, {responseType: 'blob'});
   }
 
 
-  addFileCategory =  (fileListElement: File, id: number, token: string): Observable<any> => {
+  addFileCategory = (fileListElement: File, id: number, token: string): Observable<any> => {
     const formData = new FormData();
     formData.append('file', fileListElement);
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
-    return  this.http.post(CategoryUrlEnum.GET_CATEGORY_PHOTO + `/${id}`, formData, {headers: myHeaders})
+    return this.http.post(CategoryUrlEnum.GET_CATEGORY_PHOTO + `/${id}`, formData, {headers: myHeaders})
   }
 
+  addFileSubCategory = (fileListElement: File, id: number, token: string): Observable<any> => {
+    const formData = new FormData();
+    formData.append('file', fileListElement);
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return this.http.post(CategoryUrlEnum.GET_SUB_CATEGORY_PHOTO + `/${id}`, formData, {headers: myHeaders})
+  }
+
+  addFileSubSubCategory = (fileListElement: File, id: number, token: string): Observable<any> => {
+    const formData = new FormData();
+    formData.append('file', fileListElement);
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return this.http.post(CategoryUrlEnum.GET_SUB_SUB_CATEGORY_PHOTO + `/${id}`, formData, {headers: myHeaders});
+
+  }
 }

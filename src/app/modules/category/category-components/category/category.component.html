@@ -48,7 +48,9 @@
 
             <div *ngIf="sub.isChecked">
               <div *ngFor="let sub_sub of sub.subSubCategories">
+                <button mat-button (click)="onClickSelectedSubSubCategory(sub_sub)">
                 <span style="padding-left: 5px;font-style: italic; color: blue">{{sub_sub.title}}</span>
+                </button>
               </div>
             </div>
           </div>
@@ -180,52 +182,182 @@
       </form>
     </fieldset>
   </div>
-  <div *ngIf="categoryActive=='get selected category'">
-    <mat-card class="example-card">
-      <mat-card-header>
-        <!--        <div mat-card-avatar class="example-header-image"></div>-->
-        <mat-card-title>{{selectedCategory.title}}</mat-card-title>
-<!--        <mat-card-subtitle>Dog Breed</mat-card-subtitle>-->
-      </mat-card-header>
-      <img mat-card-image [src]="selectedCategory.logoURL" alt="Photo of category">
-      <mat-card-content>
-        <form [formGroup]="addCategoryPhoto">
-          <div>
-            <mat-form-field appearance="fill">
-              <mat-label>title</mat-label>
-              <input matInput formControlName="title" required>
-            </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field appearance="fill">
-              <mat-label>url</mat-label>
-              <input matInput formControlName="overview_url" required>
-            </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field appearance="fill">
-              <mat-label>logo</mat-label>
-              <input matInput formControlName="logo">
-            </mat-form-field>
-          </div>
-          <div *ngIf="flagAddPhoto">
-            <input type="file" multiple (change)="onChangeFile($event)">
-          </div>
-        </form>
-<!--        <p>-->
-<!--          The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.-->
-<!--          A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally-->
-<!--          bred for hunting.-->
-<!--        </p>-->
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-raised-button color="primary" class="resize-button">Edit</button>
-        <button mat-raised-button color="primary" class="resize-button">Delete</button>
-        <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
-        <button mat-raised-button type="submit" color="primary" class="resize-button"
-                (click)="onSubmitPhoto(addCategoryPhoto)">Submit
-        </button>
-      </mat-card-actions>
-    </mat-card>
+  <div>
+    <div *ngIf="categoryActive=='get selected category'">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <!--        <div mat-card-avatar class="example-header-image"></div>-->
+          <mat-card-title>{{selectedCategory.title}}</mat-card-title>
+          <!--        <mat-card-subtitle>Dog Breed</mat-card-subtitle>-->
+        </mat-card-header>
+        <img mat-card-image [src]="selectedCategory.logoURL" alt="Photo of category">
+        <mat-card-content>
+          <form [formGroup]="addCategoryPhoto">
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>title</mat-label>
+                <input matInput formControlName="title" required>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>url</mat-label>
+                <input matInput formControlName="overview_url" required>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>logo</mat-label>
+                <input matInput formControlName="logo">
+              </mat-form-field>
+            </div>
+            <div *ngIf="flagAddPhoto">
+              <input type="file" multiple (change)="onChangeCategoryFile($event)">
+            </div>
+          </form>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" class="resize-button">Edit</button>
+          <button mat-raised-button color="primary" class="resize-button">Delete</button>
+          <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
+          <button mat-raised-button type="submit" color="primary" class="resize-button"
+                  (click)="onSubmitPhoto(addCategoryPhoto)">Submit
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div *ngIf="categoryActive=='get selected subCategory'">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <!--        <div mat-card-avatar class="example-header-image"></div>-->
+          <mat-card-title>{{selectedSubCategory.title}}</mat-card-title>
+          <!--        <mat-card-subtitle>Dog Breed</mat-card-subtitle>-->
+        </mat-card-header>
+        <img mat-card-image [src]="selectedSubCategory.logoURL" alt="Photo of subCategory">
+        <mat-card-content>
+          <form [formGroup]="addSubCategoryPhoto">
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>title</mat-label>
+                <input matInput formControlName="title" required>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>url</mat-label>
+                <input matInput formControlName="overview_url" required>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>logo</mat-label>
+                <input matInput formControlName="logo">
+              </mat-form-field>
+            </div>
+            <div *ngIf="flagAddPhoto">
+              <input type="file" multiple (change)="onChangeSubCategoryFile($event)">
+            </div>
+          </form>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" class="resize-button">Edit</button>
+          <button mat-raised-button color="primary" class="resize-button">Delete</button>
+          <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
+          <button mat-raised-button type="submit" color="primary" class="resize-button"
+                  (click)="onSubmitPhoto(addCategoryPhoto)">Submit
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div>
+      <div *ngIf="categoryActive=='get selected subSubCategory'">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <!--        <div mat-card-avatar class="example-header-image"></div>-->
+            <mat-card-title>{{selectedSubSubCategory.title}}</mat-card-title>
+            <!--        <mat-card-subtitle>Dog Breed</mat-card-subtitle>-->
+          </mat-card-header>
+          <img mat-card-image [src]="selectedSubSubCategory.logoURL" alt="Photo of category">
+          <mat-card-content>
+            <form [formGroup]="addSubSubCategoryPhoto">
+              <div>
+                <mat-form-field appearance="fill">
+                  <mat-label>title</mat-label>
+                  <input matInput formControlName="title" required>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field appearance="fill">
+                  <mat-label>url</mat-label>
+                  <input matInput formControlName="overview_url" required>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field appearance="fill">
+                  <mat-label>logo</mat-label>
+                  <input matInput formControlName="logo">
+                </mat-form-field>
+              </div>
+              <div *ngIf="flagAddPhoto">
+                <input type="file" multiple (change)="onChangeSubSubCategoryFile($event)">
+              </div>
+            </form>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" class="resize-button">Edit</button>
+            <button mat-raised-button color="primary" class="resize-button">Delete</button>
+            <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
+            <button mat-raised-button type="submit" color="primary" class="resize-button"
+                    (click)="onSubmitPhoto(addCategoryPhoto)">Submit
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+<!--      <div *ngIf="categoryActive=='get selected subCategory'">-->
+<!--        <mat-card class="example-card">-->
+<!--          <mat-card-header>-->
+<!--            &lt;!&ndash;        <div mat-card-avatar class="example-header-image"></div>&ndash;&gt;-->
+<!--            <mat-card-title>{{selectedSubCategory.title}}</mat-card-title>-->
+<!--            &lt;!&ndash;        <mat-card-subtitle>Dog Breed</mat-card-subtitle>&ndash;&gt;-->
+<!--          </mat-card-header>-->
+<!--          <img mat-card-image [src]="selectedSubCategory.logoURL" alt="Photo of subCategory">-->
+<!--          <mat-card-content>-->
+<!--            <form [formGroup]="addSubCategoryPhoto">-->
+<!--              <div>-->
+<!--                <mat-form-field appearance="fill">-->
+<!--                  <mat-label>title</mat-label>-->
+<!--                  <input matInput formControlName="title" required>-->
+<!--                </mat-form-field>-->
+<!--              </div>-->
+<!--              <div>-->
+<!--                <mat-form-field appearance="fill">-->
+<!--                  <mat-label>url</mat-label>-->
+<!--                  <input matInput formControlName="overview_url" required>-->
+<!--                </mat-form-field>-->
+<!--              </div>-->
+<!--              <div>-->
+<!--                <mat-form-field appearance="fill">-->
+<!--                  <mat-label>logo</mat-label>-->
+<!--                  <input matInput formControlName="logo">-->
+<!--                </mat-form-field>-->
+<!--              </div>-->
+<!--              <div *ngIf="flagAddPhoto">-->
+<!--                <input type="file" multiple (change)="onChangeSubCategoryFile($event)">-->
+<!--              </div>-->
+<!--            </form>-->
+<!--          </mat-card-content>-->
+<!--          <mat-card-actions>-->
+<!--            <button mat-raised-button color="primary" class="resize-button">Edit</button>-->
+<!--            <button mat-raised-button color="primary" class="resize-button">Delete</button>-->
+<!--            <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>-->
+<!--            <button mat-raised-button type="submit" color="primary" class="resize-button"-->
+<!--                    (click)="onSubmitPhoto(addCategoryPhoto)">Submit-->
+<!--            </button>-->
+<!--          </mat-card-actions>-->
+<!--        </mat-card>-->
+<!--      </div>-->
+
+    </div>
+
   </div>
 </div>

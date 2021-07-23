@@ -7,4 +7,6 @@ export interface ISubCategory {
   subSubCategories: any[];
   isChecked: boolean;
   isSubSubCategories: boolean;
+  logoURL: string;
+
 }
