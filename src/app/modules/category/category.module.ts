@@ -1,19 +1,18 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { CategoryRoutingModule } from './category-routing.module';
-import { CategoryComponent } from './category-components/category/category.component';
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatButtonModule} from "@angular/material/button";
-import {MatMenuModule} from "@angular/material/menu";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatSelectModule} from "@angular/material/select";
-import {MatInputModule} from "@angular/material/input";
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
-import {MatCardModule} from "@angular/material/card";
 
+import {MatButtonModule} from "@angular/material/button";
+import {MatCardModule} from "@angular/material/card";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatSelectModule} from "@angular/material/select";
+import {MatToolbarModule} from "@angular/material/toolbar";
+
+import { CategoryComponent } from './category-components/category/category.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +33,6 @@ import {MatCardModule} from "@angular/material/card";
     MatMenuModule,
     MatSelectModule,
     MatCardModule
-
   ]
 })
 export class CategoryModule { }

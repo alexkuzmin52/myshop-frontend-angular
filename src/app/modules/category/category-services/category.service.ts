@@ -1,6 +1,6 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable} from "rxjs";
+import {Observable} from "rxjs";
 
 import {CategoryUrlEnum} from "../constants";
 import {HeaderRequestEnum} from "../constants";
@@ -43,20 +43,15 @@ export class CategoryService {
 
   }
 
-  // addSubCategoryToCategory = (params: {}) => {
-
-  // }
   addSubCategoryToCategory = (param: any, token: string): Observable<any> => {
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
     return this.http.put(CategoryUrlEnum.ADD_SUB_CATEGORY_TO_CATEGORY, param, {headers: myHeaders})
   }
 
-  //TODO addSubSubCategoryToSubCategory
   addSubSubCategoryToSubCategory(param: any, token: string) {
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
     return this.http.put(CategoryUrlEnum.ADD_SUB_SUB_CATEGORY_TO_SUB_CATEGORY, param, {headers: myHeaders})
   }
-
 
   getCategoryPhoto = (categoryID: number): Observable<Blob> => {
     return this.http.get(CategoryUrlEnum.GET_CATEGORY_PHOTO + `/${categoryID}`, {responseType: 'blob'});
@@ -75,14 +70,12 @@ export class CategoryService {
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
     return this.http.post(CategoryUrlEnum.GET_CATEGORY_PHOTO + `/${id}`, formData, {headers: myHeaders})
   }
-
   addFileSubCategory = (fileListElement: File, id: number, token: string): Observable<any> => {
     const formData = new FormData();
     formData.append('file', fileListElement);
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
     return this.http.post(CategoryUrlEnum.GET_SUB_CATEGORY_PHOTO + `/${id}`, formData, {headers: myHeaders})
   }
-
   addFileSubSubCategory = (fileListElement: File, id: number, token: string): Observable<any> => {
     const formData = new FormData();
     formData.append('file', fileListElement);
