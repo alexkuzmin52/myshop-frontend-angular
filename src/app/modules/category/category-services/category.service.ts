@@ -70,7 +70,7 @@ export class CategoryService {
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
     return this.http.post(CategoryUrlEnum.GET_CATEGORY_PHOTO + `/${id}`, formData, {headers: myHeaders})
   }
-  addFileSubCategory = (fileListElement: File, id: number, token: string): Observable<any> => {
+  addFileSubCategory = (fileListElement: File, id: number, selSubCat: ISubCategory, token: string): Observable<any> => {
     const formData = new FormData();
     formData.append('file', fileListElement);
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
@@ -82,5 +82,20 @@ export class CategoryService {
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
     return this.http.post(CategoryUrlEnum.GET_SUB_SUB_CATEGORY_PHOTO + `/${id}`, formData, {headers: myHeaders});
 
+  }
+
+  deleteCategory = (selectedCategory: ICategory, token: string): Observable<ICategory> => {
+    const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+    return this.http.delete<ICategory>(CategoryUrlEnum.CATEGORY + `/${selectedCategory.id}`, {headers: myHeader, body:selectedCategory});
+  }
+
+  deleteSubCategory = (selectedSubCategory: ISubCategory, token: string): Observable<ISubCategory> => {
+    const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+    return this.http.delete<ISubCategory>(CategoryUrlEnum.SUB_CATEGORY + `/${selectedSubCategory.id}`, {headers: myHeader, body:selectedSubCategory});
+  }
+
+  deleteSubSubCategory(selectedSubSubCategory: ISubSubCategory, token: string) {
+    const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+    return this.http.delete<ISubSubCategory>(CategoryUrlEnum.SUB_SUB_CATEGORY + `/${selectedSubSubCategory.id}`, {headers: myHeader, body:selectedSubSubCategory});
   }
 }

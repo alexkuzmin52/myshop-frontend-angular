@@ -26,6 +26,7 @@
 </mat-toolbar>
 
 <div class="container">
+<!--  /**************************************** sidebar ****************************************/-->
   <div class="category-list">
     <div *ngFor="let cat of categories">
       <div>
@@ -54,11 +55,12 @@
       </div>
     </div>
   </div>
+<!--  /**************************************** forms create and add ****************************************/-->
   <div>
-    <fieldset *ngIf="categoryActive=='create category'" class="category-form">
+    <fieldset *ngIf="categoryAction=='create category'" class="category-form">
       <legend>Create Category</legend>
       <form [formGroup]="categoryForm">
-        <div *ngIf="categoryActive=='create category'">
+        <div *ngIf="categoryAction=='create category'">
           <div>
             <mat-form-field appearance="fill">
               <mat-label>Enter title</mat-label>
@@ -79,7 +81,7 @@
         </div>
       </form>
     </fieldset>
-    <fieldset *ngIf="categoryActive=='create subCategory'" class="category-form">
+    <fieldset *ngIf="categoryAction=='create subCategory'" class="category-form">
       <legend>Create subCategory</legend>
       <form [formGroup]="subCategoryForm">
         <div>
@@ -101,7 +103,7 @@
         </div>
       </form>
     </fieldset>
-    <fieldset *ngIf="categoryActive=='create subSubCategory'" class="category-form">
+    <fieldset *ngIf="categoryAction=='create subSubCategory'" class="category-form">
       <legend>Create subSubCategory</legend>
       <form [formGroup]="subSubCategoryForm">
         <div>
@@ -123,7 +125,7 @@
         </div>
       </form>
     </fieldset>
-    <fieldset *ngIf="categoryActive=='add subCategory to Category'" class="category-form">
+    <fieldset *ngIf="categoryAction=='add subCategory to Category'" class="category-form">
       <form [formGroup]="addSubCategoryForm">
         <legend>Add SubCategory to Category</legend>
         <mat-form-field appearance="fill">
@@ -150,9 +152,9 @@
         </div>
       </form>
     </fieldset>
-    <fieldset *ngIf="categoryActive=='add subSubCategory to subCategory'" class="category-form">
+    <fieldset *ngIf="categoryAction=='add subSubCategory to subCategory'" class="category-form">
       <form [formGroup]="addSubSubCategoryForm">
-        <legend>Add SubSubCategory to Category</legend>
+        <legend>Add SubSubCategory to subCategory</legend>
         <mat-form-field appearance="fill">
           <mat-label>Selected SubCategory</mat-label>
           <mat-select [(value)]="selectedSubCategory" formControlName="idSubCat">
@@ -178,8 +180,10 @@
       </form>
     </fieldset>
   </div>
+<!--  /**************************************** cards/forms categories items ****************************************/-->
   <div>
-    <div *ngIf="categoryActive=='get selected category'">
+<!--    /**************************************** category item card ****************************************/-->
+    <div *ngIf="categoryAction=='get selected category'">
       <mat-card class="example-card">
         <mat-card-header>
           <mat-card-title>{{selectedCategory.title}}</mat-card-title>
@@ -212,13 +216,14 @@
         </mat-card-content>
         <mat-card-actions>
           <button mat-raised-button color="primary" class="resize-button">Edit</button>
-          <button mat-raised-button color="primary" class="resize-button">Delete</button>
+          <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteCategory()">Delete</button>
           <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
           <button mat-raised-button type="submit" color="primary" class="resize-button"></button>
         </mat-card-actions>
       </mat-card>
     </div>
-    <div *ngIf="categoryActive=='get selected subCategory'">
+<!--    /**************************************** subCategory item card ****************************************/-->
+    <div *ngIf="categoryAction=='get selected subCategory'">
       <mat-card class="example-card">
         <mat-card-header>
           <mat-card-title>{{selectedSubCategory.title}}</mat-card-title>
@@ -251,14 +256,15 @@
         </mat-card-content>
         <mat-card-actions>
           <button mat-raised-button color="primary" class="resize-button">Edit</button>
-          <button mat-raised-button color="primary" class="resize-button">Delete</button>
+          <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteSubCategory()">Delete</button>
           <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
           <button mat-raised-button type="submit" color="primary" class="resize-button"></button>
         </mat-card-actions>
       </mat-card>
     </div>
+<!--    /**************************************** subSubCategory item card ****************************************/-->
     <div>
-      <div *ngIf="categoryActive=='get selected subSubCategory'">
+      <div *ngIf="categoryAction=='get selected subSubCategory'">
         <mat-card class="example-card">
           <mat-card-header>
             <mat-card-title>{{selectedSubSubCategory.title}}</mat-card-title>
@@ -291,7 +297,7 @@
           </mat-card-content>
           <mat-card-actions>
             <button mat-raised-button color="primary" class="resize-button">Edit</button>
-            <button mat-raised-button color="primary" class="resize-button">Delete</button>
+            <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteSubSubCategory()">Delete</button>
             <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
             <button mat-raised-button type="submit" color="primary" class="resize-button"></button>
           </mat-card-actions>
