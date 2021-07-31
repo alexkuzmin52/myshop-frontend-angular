@@ -21,3 +21,8 @@
   padding: 0;
   background-color: #cd7a3c;
 }
+.card-action {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

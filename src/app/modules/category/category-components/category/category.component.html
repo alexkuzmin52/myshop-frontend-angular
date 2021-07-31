@@ -190,17 +190,18 @@
         </mat-card-header>
         <img mat-card-image [src]="selectedCategory.logoURL" alt="Photo of category">
         <mat-card-content>
-          <form [formGroup]="addCategoryPhoto">
+          <form [formGroup]="categoryCard">
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>title</mat-label>
+<!--                <input matInput formControlName="title" required [attr.disabled]="flagEditCategoryCard?null:'true'">-->
                 <input matInput formControlName="title" required>
               </mat-form-field>
             </div>
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>url</mat-label>
-                <input matInput formControlName="overview_url" required>
+                <input matInput formControlName="overview_url" required [attr.disabled]="flagEditCategoryCard?'true':null">
               </mat-form-field>
             </div>
             <div>
@@ -209,16 +210,29 @@
                 <input matInput formControlName="logo">
               </mat-form-field>
             </div>
-            <div *ngIf="flagAddPhoto">
+            <div *ngIf="flagCategoryCard">
               <input type="file" multiple (change)="onChangeCategoryFile($event)">
             </div>
           </form>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-raised-button color="primary" class="resize-button">Edit</button>
-          <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteCategory()">Delete</button>
-          <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
-          <button mat-raised-button type="submit" color="primary" class="resize-button"></button>
+          <div class="card-action">
+            <div>
+              <button mat-raised-button color="primary" class="resize-button" (click)="onEditCategoryCardForms()" [disabled]="!flagEditCategoryCard">Edit</button>
+            </div>
+            <div *ngIf="!flagEditCategoryCard">
+              <button mat-raised-button type="submit" class="resize-button" (click)="onSaveEditCategory(categoryCard)">Save</button>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteCategory()" [disabled]="!flagEditCategoryCard">Delete</button>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()" [disabled]="!flagEditCategoryCard">Photo</button>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="resize-button"(click)="onCancelCardForms()">Cancel</button>
+            </div>
+          </div>
         </mat-card-actions>
       </mat-card>
     </div>
@@ -230,7 +244,7 @@
         </mat-card-header>
         <img mat-card-image [src]="selectedSubCategory.logoURL" alt="Photo of subCategory">
         <mat-card-content>
-          <form [formGroup]="addSubCategoryPhoto">
+          <form [formGroup]="subCategoryCard">
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>title</mat-label>
@@ -240,7 +254,7 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>url</mat-label>
-                <input matInput formControlName="overview_url" required>
+                <input matInput formControlName="overview_url" required [attr.disabled]="flagEditSubCategoryCard?'true':null">
               </mat-form-field>
             </div>
             <div>
@@ -249,60 +263,142 @@
                 <input matInput formControlName="logo">
               </mat-form-field>
             </div>
-            <div *ngIf="flagAddPhoto">
+            <div *ngIf="flagCategoryCard">
               <input type="file" multiple (change)="onChangeSubCategoryFile($event)">
             </div>
           </form>
         </mat-card-content>
+<!--        <mat-card-actions>-->
+<!--          <button mat-raised-button color="primary" class="resize-button">Edit</button>-->
+<!--          <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteSubCategory()">Delete</button>-->
+<!--          <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>-->
+<!--          <button mat-raised-button color="primary" class="resize-button" (click)="onCancelCardForms()">Cancel</button>-->
+<!--        </mat-card-actions>-->
         <mat-card-actions>
-          <button mat-raised-button color="primary" class="resize-button">Edit</button>
-          <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteSubCategory()">Delete</button>
-          <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
-          <button mat-raised-button type="submit" color="primary" class="resize-button"></button>
+          <div class="card-action">
+            <div>
+              <button mat-raised-button color="primary" class="resize-button" (click)="onEditSubCategoryCardForms()" [disabled]="!flagEditSubCategoryCard">Edit</button>
+            </div>
+            <div *ngIf="!flagEditSubCategoryCard">
+              <button mat-raised-button type="submit" class="resize-button" (click)="onSaveEditSubCategory(subCategoryCard)">Save</button>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteSubCategory()" [disabled]="!flagEditSubCategoryCard">Delete</button>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()" [disabled]="!flagEditSubCategoryCard">Photo</button>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="resize-button"(click)="onCancelCardForms()">Cancel</button>
+            </div>
+          </div>
         </mat-card-actions>
+
       </mat-card>
     </div>
 <!--    /**************************************** subSubCategory item card ****************************************/-->
-    <div>
-      <div *ngIf="categoryAction=='get selected subSubCategory'">
-        <mat-card class="example-card">
-          <mat-card-header>
-            <mat-card-title>{{selectedSubSubCategory.title}}</mat-card-title>
-          </mat-card-header>
-          <img mat-card-image [src]="selectedSubSubCategory.logoURL" alt="Photo of SubSubCategory">
-          <mat-card-content>
-            <form [formGroup]="addSubSubCategoryPhoto">
-              <div>
-                <mat-form-field appearance="fill">
-                  <mat-label>title</mat-label>
-                  <input matInput formControlName="title" required>
-                </mat-form-field>
-              </div>
-              <div>
-                <mat-form-field appearance="fill">
-                  <mat-label>url</mat-label>
-                  <input matInput formControlName="overview_url" required>
-                </mat-form-field>
-              </div>
-              <div>
-                <mat-form-field appearance="fill">
-                  <mat-label>logo</mat-label>
-                  <input matInput formControlName="logo">
-                </mat-form-field>
-              </div>
-              <div *ngIf="flagAddPhoto">
-                <input type="file" multiple (change)="onChangeSubSubCategoryFile($event)">
-              </div>
-            </form>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-raised-button color="primary" class="resize-button">Edit</button>
-            <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteSubSubCategory()">Delete</button>
-            <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>
-            <button mat-raised-button type="submit" color="primary" class="resize-button"></button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
+<!--    <div>-->
+<!--      <div *ngIf="categoryAction=='get selected subSubCategory'">-->
+<!--        <mat-card class="example-card">-->
+<!--          <mat-card-header>-->
+<!--            <mat-card-title>{{selectedSubSubCategory.title}}</mat-card-title>-->
+<!--          </mat-card-header>-->
+<!--          <img mat-card-image [src]="selectedSubSubCategory.logoURL" alt="Photo of SubSubCategory">-->
+<!--          <mat-card-content>-->
+<!--            <form [formGroup]="subSubCategoryCard">-->
+<!--              <div>-->
+<!--                <mat-form-field appearance="fill">-->
+<!--                  <mat-label>title</mat-label>-->
+<!--                  <input matInput formControlName="title" required>-->
+<!--                </mat-form-field>-->
+<!--              </div>-->
+<!--              <div>-->
+<!--                <mat-form-field appearance="fill">-->
+<!--                  <mat-label>url</mat-label>-->
+<!--                  <input matInput formControlName="overview_url" required>-->
+<!--                </mat-form-field>-->
+<!--              </div>-->
+<!--              <div>-->
+<!--                <mat-form-field appearance="fill">-->
+<!--                  <mat-label>logo</mat-label>-->
+<!--                  <input matInput formControlName="logo">-->
+<!--                </mat-form-field>-->
+<!--              </div>-->
+<!--              <div *ngIf="flagCategoryCard">-->
+<!--                <input type="file" multiple (change)="onChangeSubSubCategoryFile($event)">-->
+<!--              </div>-->
+<!--            </form>-->
+<!--          </mat-card-content>-->
+<!--          <mat-card-actions>-->
+<!--            <button mat-raised-button color="primary" class="resize-button">Edit</button>-->
+<!--            <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteSubSubCategory()">Delete</button>-->
+<!--            <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>-->
+<!--            <button mat-raised-button color="primary" class="resize-button"(click)="onCancelCardForms()">Cancel</button>-->
+<!--          </mat-card-actions>-->
+<!--        </mat-card>-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <div *ngIf="categoryAction=='get selected subSubCategory'">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <mat-card-title>{{selectedSubSubCategory.title}}</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image [src]="selectedSubSubCategory.logoURL" alt="Photo of subSubCategory">
+        <mat-card-content>
+          <form [formGroup]="subSubCategoryCard">
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>title</mat-label>
+                <input matInput formControlName="title" required>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>url</mat-label>
+                <input matInput formControlName="overview_url" required [attr.disabled]="flagEditSubSubCategoryCard?'true':null">
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>logo</mat-label>
+                <input matInput formControlName="logo">
+              </mat-form-field>
+            </div>
+            <div *ngIf="flagCategoryCard">
+              <input type="file" multiple (change)="onChangeSubCategoryFile($event)">
+            </div>
+          </form>
+        </mat-card-content>
+        <!--        <mat-card-actions>-->
+        <!--          <button mat-raised-button color="primary" class="resize-button">Edit</button>-->
+        <!--          <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteSubCategory()">Delete</button>-->
+        <!--          <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()">Photo</button>-->
+        <!--          <button mat-raised-button color="primary" class="resize-button" (click)="onCancelCardForms()">Cancel</button>-->
+        <!--        </mat-card-actions>-->
+        <mat-card-actions>
+          <div class="card-action">
+            <div>
+              <button mat-raised-button color="primary" class="resize-button" (click)="onEditSubSubCategoryCardForms()" [disabled]="!flagEditSubSubCategoryCard">Edit</button>
+            </div>
+            <div *ngIf="!flagEditSubSubCategoryCard">
+              <button mat-raised-button type="submit" class="resize-button" (click)="onSaveEditSubSubCategory(subSubCategoryCard)">Save</button>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="resize-button" (click)="onDeleteSubSubCategory()" [disabled]="!flagEditSubSubCategoryCard">Delete</button>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="resize-button" (click)="onAddLogo()" [disabled]="!flagEditSubSubCategoryCard">Photo</button>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="resize-button"(click)="onCancelCardForms()">Cancel</button>
+            </div>
+          </div>
+        </mat-card-actions>
+
+      </mat-card>
     </div>
+
+
   </div>
 </div>

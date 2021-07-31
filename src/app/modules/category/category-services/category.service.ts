@@ -86,16 +86,38 @@ export class CategoryService {
 
   deleteCategory = (selectedCategory: ICategory, token: string): Observable<ICategory> => {
     const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
-    return this.http.delete<ICategory>(CategoryUrlEnum.CATEGORY + `/${selectedCategory.id}`, {headers: myHeader, body:selectedCategory});
+    return this.http.delete<ICategory>(CategoryUrlEnum.CATEGORY + `/${selectedCategory.id}`, {
+      headers: myHeader,
+      body: selectedCategory
+    });
   }
 
   deleteSubCategory = (selectedSubCategory: ISubCategory, token: string): Observable<ISubCategory> => {
     const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
-    return this.http.delete<ISubCategory>(CategoryUrlEnum.SUB_CATEGORY + `/${selectedSubCategory.id}`, {headers: myHeader, body:selectedSubCategory});
+    return this.http.delete<ISubCategory>(CategoryUrlEnum.SUB_CATEGORY + `/${selectedSubCategory.id}`, {
+      headers: myHeader,
+      body: selectedSubCategory
+    });
   }
 
   deleteSubSubCategory(selectedSubSubCategory: ISubSubCategory, token: string) {
     const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
-    return this.http.delete<ISubSubCategory>(CategoryUrlEnum.SUB_SUB_CATEGORY + `/${selectedSubSubCategory.id}`, {headers: myHeader, body:selectedSubSubCategory});
+    return this.http.delete<ISubSubCategory>(CategoryUrlEnum.SUB_SUB_CATEGORY + `/${selectedSubSubCategory.id}`, {
+      headers: myHeader,
+      body: selectedSubSubCategory
+    });
+  }
+
+  editCategory = (category: ICategory, categoryID: number, token: string): Observable<ICategory> => {
+    const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+   return  this.http.put<ICategory>(CategoryUrlEnum.CATEGORY + `/${categoryID}`,category, {headers: myHeader});
+  }
+  editSubCategory = (subCategory: ISubCategory, subCategoryID: number, token: string): Observable<ISubCategory> => {
+    const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+   return  this.http.put<ISubCategory>(CategoryUrlEnum.SUB_CATEGORY + `/${subCategoryID}`,subCategory, {headers: myHeader});
+  }
+  editSubSubCategory = (subSubCategory: ISubSubCategory, subSubCategoryID: number, token: string): Observable<ISubSubCategory> => {
+    const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
+   return  this.http.put<ISubSubCategory>(CategoryUrlEnum.SUB_SUB_CATEGORY + `/${subSubCategoryID}`,subSubCategory, {headers: myHeader});
   }
 }
