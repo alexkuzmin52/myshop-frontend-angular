@@ -8,6 +8,8 @@ import {NotFoundComponent} from "../app-components/not-found/not-found.component
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'category', loadChildren: () => import('../modules/category/category.module').then(m => m.CategoryModule)},
+  {path: 'product', loadChildren: () => import('../modules/product/product.module').then(m => m.ProductModule)},
+
   {path: '**', component: NotFoundComponent}
 ]
 

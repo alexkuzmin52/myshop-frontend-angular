@@ -16,4 +16,8 @@ export class HomeComponent implements OnInit {
   onCategory() {
     this.router.navigate(['category'])
   }
+
+  onProduct() {
+    this.router.navigate(['product'])
+  }
 }
