@@ -18,13 +18,11 @@ export class CategoryComponent implements OnInit {
   subSubCategories: ISubSubCategory[] = [];
 
   categoryAction: CategoryActionEnum;
-
+  activeForm: FormGroup | any = 0;
   flagCategoryCard = false;
-  flagEditCategoryCard: boolean;
-  flagEditSubCategoryCard: boolean;
-  flagEditSubSubCategoryCard: boolean;
+  flagEdit: boolean;
 
-  selectedCategory: ICategory | any;
+  selectedCategory: ICategory | any;  // TODO = {} as ICategory
   selectedSubCategory: ISubCategory | any;
   selectedSubSubCategory: ISubSubCategory | any;
 
@@ -37,6 +35,8 @@ export class CategoryComponent implements OnInit {
   subCategoryCard: FormGroup;
   subSubCategoryCard: FormGroup;
 
+  categoryContext = {active: ''};
+
   token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTk2MDcxNjUsImV4cCI6MTYyODI0NzE2NX0.hVS9Esd4mVw8gHe97oUJTBd9VdyBCmddqJ1afHuS-Sk';
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -48,9 +48,7 @@ export class CategoryComponent implements OnInit {
     this.categories = activatedRoute.snapshot.data.data[0];
     this.subCategories = activatedRoute.snapshot.data.data[1];
     this.subSubCategories = activatedRoute.snapshot.data.data[2];
-    this.flagEditCategoryCard = true;
-    this.flagEditSubCategoryCard = true;
-    this.flagEditSubSubCategoryCard = true;
+    this.flagEdit = true;
 
     for (const category of this.categories) {
       category.isChecked = false;
@@ -88,11 +86,10 @@ export class CategoryComponent implements OnInit {
     this.categoryCard = fb.group({
       title: [{
         value: '',
-        disabled: this.flagEditCategoryCard
+        disabled: this.flagEdit
       }, [Validators.required, Validators.pattern(RegexEnum.title_categories)]],
       overview_url: [{
         value: '',
-        // disabled: this.flagEditCategoryCard
         disabled: true
       }, [Validators.required, Validators.pattern(RegexEnum.url)]],
       logo: [{value: '', disabled: true}]
@@ -100,11 +97,10 @@ export class CategoryComponent implements OnInit {
     this.subCategoryCard = fb.group({
       title: [{
         value: '',
-        disabled: this.flagEditSubCategoryCard
+        disabled: this.flagEdit
       }, [Validators.required, Validators.pattern(RegexEnum.title_categories)]],
       overview_url: [{
         value: '',
-        // disabled: this.flagEditCategoryCard
         disabled: true
       }, [Validators.required, Validators.pattern(RegexEnum.url)]],
       logo: [{value: '', disabled: true}]
@@ -112,11 +108,10 @@ export class CategoryComponent implements OnInit {
     this.subSubCategoryCard = fb.group({
       title: [{
         value: '',
-        disabled: this.flagEditSubCategoryCard
+        disabled: this.flagEdit
       }, [Validators.required, Validators.pattern(RegexEnum.title_categories)]],
       overview_url: [{
         value: '',
-        // disabled: this.flagEditCategoryCard
         disabled: true
       }, [Validators.required, Validators.pattern(RegexEnum.url)]],
       logo: [{value: '', disabled: true}]
@@ -132,21 +127,27 @@ export class CategoryComponent implements OnInit {
 
   onCreateCategory(): void {
     this.categoryAction = CategoryActionEnum.CREATE_CATEGORY;
+    this.activeForm = this.categoryForm;
+    this.categoryContext.active = this.categoryAction;
   }
 
   onCreateSubCategory(): void {
     this.categoryAction = CategoryActionEnum.CREATE_SUB_CATEGORY;
+    this.activeForm = this.subCategoryForm;
+    this.categoryContext.active = this.categoryAction;
   }
 
   onCreateSubSubCategory(): void {
     this.categoryAction = CategoryActionEnum.CREATE_SUB_SUB_CATEGORY;
+    this.activeForm = this.subSubCategoryForm;
+    this.categoryContext.active = this.categoryAction;
   }
 
-  onAddSubCategoryToCategory() {
+  onAddSubCategoryToCategory(): void {
     this.categoryAction = CategoryActionEnum.ADD_SUB_CATEGORY_TO_CATEGORY;
   }
 
-  onAddSubSubCategoryToSubCategory() {
+  onAddSubSubCategoryToSubCategory(): void {
     this.categoryAction = CategoryActionEnum.ADD_SUB_SUB_CATEGORY_TO_SUB_CATEGORY;
 
   }
@@ -190,9 +191,12 @@ export class CategoryComponent implements OnInit {
     if (fileList.length) {
       this.categoryCard.controls['logo'].setValue(fileList[0].name);
       this.categoryService.addFileCategory(fileList[0], this.selectedCategory.id, this.token).subscribe(res => {
-        console.log(res);
-        // this.flagCategoryCard = false;
-      })
+          console.log(res);
+        },
+        error => {
+          console.log(error.error.message);
+          alert(`error: ${error.error.message}`);
+        })
     }
     this.flagCategoryCard = false;
 
@@ -205,10 +209,14 @@ export class CategoryComponent implements OnInit {
       this.categoryService.addFileSubCategory(fileList[0],
         this.selectedSubCategory.id,
         this.selectedSubCategory,
-        // this.selectedSubCategory.title,
         this.token).subscribe(res => {
-        this.flagCategoryCard = false;
-      })
+          console.log(res);
+          this.flagCategoryCard = false;
+        },
+        error => {
+          console.log(error.error.message);
+          alert(`error: ${error.error.message}`);
+        })
     }
   }
 
@@ -217,10 +225,14 @@ export class CategoryComponent implements OnInit {
     if (fileList.length) {
       this.subSubCategoryCard.controls['logo'].setValue(fileList[0].name);
       this.categoryService.addFileSubSubCategory(fileList[0], this.selectedSubSubCategory.id, this.token).subscribe(res => {
-        this.flagCategoryCard = false;
-      })
+          this.flagCategoryCard = false;
+          console.log(res);
+        },
+        error => {
+          console.log(error.error.message);
+          alert(`error: ${error.error.message}`);
+        })
     }
-
   }
 
   onCancelCategoryForms() {
@@ -237,6 +249,7 @@ export class CategoryComponent implements OnInit {
 
   onSubmitAddSubCategory(param: FormGroup) {
     this.categoryService.addSubCategoryToCategory(param.value, this.token).subscribe(res => {
+        console.log(res);
       },
       error => {
         alert(`error: ${error.error.message}`)
@@ -245,6 +258,7 @@ export class CategoryComponent implements OnInit {
 
   onSubmitAddSubSubCategory(param: FormGroup) {
     this.categoryService.addSubSubCategoryToSubCategory(param.value, this.token).subscribe(res => {
+        console.log(res);
       },
       error => {
         alert(`error: ${error.error.message}`)
@@ -274,8 +288,9 @@ export class CategoryComponent implements OnInit {
   }
 
   onClickSelectedCategory(cat: ICategory) {
-    this.flagEditCategoryCard = true;
+    this.flagEdit = true;
     this.selectedCategory = cat;
+    this.activeForm = this.categoryCard;
     this.categoryCard.controls['title'].setValue(this.selectedCategory.title)
     this.categoryCard.controls['overview_url'].setValue(this.selectedCategory.overview_url)
     this.categoryCard.controls['logo'].setValue(this.selectedCategory.logo)
@@ -283,13 +298,18 @@ export class CategoryComponent implements OnInit {
 
     this.categoryService.getCategoryPhoto(this.selectedCategory.id)
       .subscribe(res => {
-        const url = URL.createObjectURL(res);
-        this.selectedCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      })
+          const url = URL.createObjectURL(res);
+          this.selectedCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        },
+        error => {
+          console.log(error.error.message);
+          alert(`error: ${error.error.message}`);
+        })
   }
 
   onClickSelectedSubCategory(sub: ISubCategory) {
-    this.flagEditSubCategoryCard = true;
+    this.flagEdit = true;
+    this.activeForm = this.subCategoryCard;
     this.selectedSubCategory = sub;
     this.subCategoryCard.controls['title'].setValue(this.selectedSubCategory.title);
     this.subCategoryCard.controls['overview_url'].setValue(this.selectedSubCategory.overview_url);
@@ -298,13 +318,19 @@ export class CategoryComponent implements OnInit {
 
     this.categoryService.getSubCategoryPhoto(this.selectedSubCategory.id)
       .subscribe(res => {
-        const url = URL.createObjectURL(res);
-        this.selectedSubCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      })
+          const url = URL.createObjectURL(res);
+          this.selectedSubCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        },
+        error => {
+          console.log(error.error.message);
+          alert(`error: ${error.error.message}`);
+        })
   }
 
   onClickSelectedSubSubCategory(sub_sub: ISubSubCategory) {
-    this.flagEditSubSubCategoryCard = true;
+    this.flagEdit = true;
+    this.activeForm = this.subSubCategoryCard;
+
     this.selectedSubSubCategory = sub_sub;
     this.subSubCategoryCard.controls['title'].setValue(this.selectedSubSubCategory.title);
     this.subSubCategoryCard.controls['overview_url'].setValue(this.selectedSubSubCategory.overview_url);
@@ -313,9 +339,13 @@ export class CategoryComponent implements OnInit {
 
     this.categoryService.getSubSubCategoryPhoto(this.selectedSubSubCategory.id)
       .subscribe(res => {
-        const url = URL.createObjectURL(res);
-        this.selectedSubSubCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      })
+          const url = URL.createObjectURL(res);
+          this.selectedSubSubCategory.logoURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        },
+        error => {
+          console.log(error.error.message);
+          alert(`error: ${error.error.message}`);
+        })
   }
 
   onDeleteCategory() {
@@ -354,49 +384,141 @@ export class CategoryComponent implements OnInit {
     this.selectedCategory = 0;
     this.selectedSubCategory = 0;
     this.selectedSubSubCategory = 0;
-    this.flagEditCategoryCard = true;
-    this.flagEditSubCategoryCard = true;
-    this.flagEditSubSubCategoryCard = true;
-  }
-
-  onEditCategoryCardForms() {
-    this.flagEditCategoryCard = false;
-  }
-  onEditSubCategoryCardForms() {
-    this.flagEditSubCategoryCard = false;
-  }
-  onEditSubSubCategoryCardForms() {
-    this.flagEditSubSubCategoryCard = false;
+    this.flagEdit = true;
   }
 
   onSaveEditCategory(categoryCard: FormGroup) {
     if (confirm('Do you want to save changes to this category?')) {
       delete categoryCard.value.logo;
       this.categoryService.editCategory(categoryCard.value, this.selectedCategory.id, this.token).subscribe(res => {
-        console.log(res);
-      })
+          console.log(res);
+          this.flagEdit = true;
+        },
+        error => {
+          alert(`error: ${error.error.message}`)
+        })
     } else {
-      this.flagEditSubCategoryCard = true;
+      this.flagEdit = true;
+
     }
   }
+
   onSaveEditSubCategory(subCategoryCard: FormGroup) {
     if (confirm('Do you want to save changes to this subCategory?')) {
       delete subCategoryCard.value.logo;
       this.categoryService.editSubCategory(subCategoryCard.value, this.selectedSubCategory.id, this.token).subscribe(res => {
-        console.log(res);
-      })
+          console.log(res);
+          this.flagEdit = true;
+        },
+        error => {
+          alert(`error: ${error.error.message}`)
+        })
     } else {
-      this.flagEditSubCategoryCard = true;
+      this.flagEdit = true;
     }
   }
+
   onSaveEditSubSubCategory(subSubCategoryCard: FormGroup) {
     if (confirm('Do you want to save changes to this subSubCategory?')) {
       delete subSubCategoryCard.value.logo;
       this.categoryService.editSubSubCategory(subSubCategoryCard.value, this.selectedSubSubCategory.id, this.token).subscribe(res => {
-        console.log(res);
-      })
+          console.log(res);
+          this.flagEdit = true;
+        },
+        error => {
+          alert(`error: ${error.error.message}`)
+        })
     } else {
-      this.flagEditSubCategoryCard = true;
+      this.flagEdit = true;
     }
+  }
+
+  onSubmitCreateCategory(activeForm: FormGroup) {
+    switch (this.categoryAction) {
+      case CategoryActionEnum.CREATE_CATEGORY:
+        this.onSubmitCategory(activeForm);
+        break;
+      case CategoryActionEnum.CREATE_SUB_CATEGORY:
+        this.onSubmitSubCategory(activeForm);
+        break;
+      case CategoryActionEnum.CREATE_SUB_SUB_CATEGORY:
+        this.onSubmitSubSubCategory(activeForm);
+        break;
+      default:
+        break;
+    }
+
+  }
+
+  onEditCategoryCard() {
+    switch (this.categoryAction) {
+      case CategoryActionEnum.GET_SELECTED_CATEGORY:
+        this.flagEdit = false;
+
+        break;
+      case CategoryActionEnum.GET_SELECTED_SUB_CATEGORY:
+        // this.flagEditSubCategoryCard = false;
+        this.flagEdit = false;
+
+        break;
+      case CategoryActionEnum.GET_SELECTED_SUB_SUB_CATEGORY:
+        // this.flagEditSubSubCategoryCard = false;
+        this.flagEdit = false;
+
+        break;
+      default:
+        break;
+    }
+  }
+
+  onSaveEditCategoryCard(activeForm: any) {
+    switch (this.categoryAction) {
+      case CategoryActionEnum.GET_SELECTED_CATEGORY:
+        this.onSaveEditCategory(activeForm);
+        break;
+      case CategoryActionEnum.GET_SELECTED_SUB_CATEGORY:
+        this.onSaveEditSubCategory(activeForm);
+        break;
+      case CategoryActionEnum.GET_SELECTED_SUB_SUB_CATEGORY:
+        this.onSaveEditSubSubCategory(activeForm);
+        break;
+      default:
+        break;
+    }
+
+  }
+
+  onDeleteCategoryCard() {
+    switch (this.categoryAction) {
+      case CategoryActionEnum.GET_SELECTED_CATEGORY:
+        this.onDeleteCategory();
+        break;
+      case CategoryActionEnum.GET_SELECTED_SUB_CATEGORY:
+        this.onDeleteSubCategory();
+        break;
+      case CategoryActionEnum.GET_SELECTED_SUB_SUB_CATEGORY:
+        this.onDeleteSubSubCategory();
+        break;
+      default:
+        break;
+    }
+
+  }
+
+  onChangeCategoryFileCard(event: any) {
+    switch (this.categoryAction) {
+      case CategoryActionEnum.GET_SELECTED_CATEGORY:
+        this.onChangeCategoryFile(event);
+        break;
+      case CategoryActionEnum.GET_SELECTED_SUB_CATEGORY:
+        this.onChangeSubCategoryFile(event);
+        break;
+      case CategoryActionEnum.GET_SELECTED_SUB_SUB_CATEGORY:
+        this.onChangeSubSubCategoryFile(event);
+        break;
+      default:
+        break;
+    }
+
   }
 }

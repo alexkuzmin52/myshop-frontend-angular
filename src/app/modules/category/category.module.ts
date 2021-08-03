@@ -23,7 +23,6 @@ import { CategoryComponent } from './category-components/category/category.compo
     CategoryRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-
     MatToolbarModule,
     MatButtonModule,
     MatMenuModule,
