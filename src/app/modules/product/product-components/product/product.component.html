@@ -1,4 +1,32 @@
 <p>product works!</p>
 <mat-toolbar color="primary">
   <span style="color: yellow">Продукты</span>
+  <button mat-button (click)="onHome()">Home</button>
+  <button mat-button [matMenuTriggerFor]="createProductMenu">Create</button>
+  <mat-menu #createProductMenu>
+    <button mat-menu-item>from Form</button>
+    <button mat-menu-item (click)="onCreateProductsFromCSV()">from CSV</button>
+  </mat-menu>
 </mat-toolbar>
+
+<div class="container">
+  <div *ngIf="productAction =='create product csv'">
+    <fieldset>
+      <form [formGroup]="createProductCSV">
+        <legend>Create categories from csv file</legend>
+        <mat-form-field appearens="fill">
+          <mat-label>Csv file</mat-label>
+          <input matInput placeholder="file" formControlName="file_name">
+        </mat-form-field>
+        <div>
+          <input type="file" multiple (change)="onChangeCsvFile($event)">
+        </div>
+        <br>
+        <div>
+          <button mat-raised-button color="primary" (click)="onSubmitCreateProductsFromCSV()">Submit</button>
+        </div>
+      </form>
+    </fieldset>
+  </div>
+
+</div>
