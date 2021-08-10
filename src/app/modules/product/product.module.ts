@@ -9,6 +9,8 @@ import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 @NgModule({
@@ -25,7 +27,10 @@ import {MatFormFieldModule} from "@angular/material/form-field";
     MatButtonModule,
     MatMenuModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatSelectModule,
+    MatCheckboxModule
+
   ]
 })
 export class ProductModule { }

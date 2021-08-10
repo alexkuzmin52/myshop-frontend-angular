@@ -24,6 +24,7 @@ import { CategoryComponent } from './category-components/category/category.compo
     FormsModule,
     ReactiveFormsModule,
     MatToolbarModule,
+    MatFormFieldModule,
     MatButtonModule,
     MatMenuModule,
     MatCheckboxModule,

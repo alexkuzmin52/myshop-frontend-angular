@@ -10,6 +10,7 @@
 </mat-toolbar>
 
 <div class="container">
+  <!--  ******************************** create product from CSV ********************************-->
   <div *ngIf="productAction =='create product csv'">
     <fieldset>
       <form [formGroup]="createProductCSV">
@@ -28,5 +29,154 @@
       </form>
     </fieldset>
   </div>
+  <!--  ******************************** create product form ********************************-->
+  <div>
+    <fieldset>
+      <form [formGroup]="productForm">
+        <legend>Create product</legend>
+          <!--================================ title ==============================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Max 50, Min 3 characters">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" #title required>
+            <mat-hint align="end">
+              {{title.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ accountingType =======================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>AccountingType</mat-label>
+            <mat-select [(value)]="selectedAccountingType" formControlName="accountingType">
+              <mat-option *ngFor="let account of accountingType" [value]="account.value">
+                {{account.value}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!--================================ brand =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Max 30, Min 2 characters">
+            <mat-label>Brand</mat-label>
+            <input matInput formControlName="brand" #brand maxlength="30" minlength="3" required>
+            <mat-hint align="end">
+              {{brand.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ level =======================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label> Choose category level</mat-label>
+            <mat-select [(value)]="selectedCategoryLevel" formControlName="level"
+                        (selectionChange)="onChangeCategoryLevel($event)">
+              <mat-option *ngFor="let item of categoryLevel" [value]="item.level">
+                {{item.level}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category">
+              <mat-option *ngFor="let cat of categoriesTitleList" [value]="cat">
+                {{cat}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!--================================ countryOfManufacture =======================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Country of Manufacture</mat-label>
+            <mat-select formControlName="countryOfManufacture">
+              <mat-option *ngFor="let country of countries" [value]="country.name">
+                {{country.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!--================================ discount =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 0.99">
+            <mat-label>Discount</mat-label>
+            <input matInput type="number" formControlName="discount" #discount min="0" max="0.99" step="0.1">
+            <mat-hint align="end">
+              {{discount.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ originalPrice =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0.1, Max 99999">
+            <mat-label>originalPrice</mat-label>
+            <input matInput type="number" formControlName="originalPrice" #originalPrice min="0.1" max="99999" step="1" required>
+            <mat-hint align="end">
+              {{originalPrice.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ equipment =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>Equipment</mat-label>
+            <textarea matInput formControlName="equipment" #equipment minlength="0" maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{equipment.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ fullCharacteristics =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>fullCharacteristics</mat-label>
+            <textarea matInput formControlName="fullCharacteristics" #fullCharacteristics minlength="0" maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{fullCharacteristics.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ fullDescription =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>fullDescription</mat-label>
+            <textarea matInput formControlName="fullDescription" #fullDescription minlength="0" maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{fullDescription.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ newFlag =======================================-->
+          <mat-checkbox formControlName="newFlag" (change)="onChangeNewFlag($event)">newFlag</mat-checkbox>
+        <!--================================ overview_url =======================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>overview_url</mat-label>
+            <input matInput formControlName="overview_url" #overview_url required>
+          </mat-form-field>
+        </div>
+        <!--================================ packageAmount =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 1">
+            <mat-label>packageAmount</mat-label>
+            <input matInput type="number" formControlName="packageAmount" #originalPrice min="1" step="1" required>
+            <mat-hint align="end">
+              {{originalPrice.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+
+
+
+        <div>
+          <button mat-raised-button color="primary" (click)="onSubmitCreateProduct(productForm)"
+                  [disabled]="productForm.status=='INVALID'">Submit
+          </button>
+          <button mat-raised-button color="primary" type="reset">Reset</button>
+        </div>
+      </form>
+    </fieldset>
+  </div>
+
 
 </div>

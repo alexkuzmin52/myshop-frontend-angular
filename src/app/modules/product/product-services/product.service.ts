@@ -4,6 +4,8 @@ import {Observable} from "rxjs";
 import {IProduct} from "../product-models/product-interface";
 import {ProductUrlEnum} from "../product-constants/product-url-enum";
 import {HeaderRequestEnum} from "../product-constants/header-request-enum";
+import {ICategory, ISubCategory, ISubSubCategory} from "../../category/category-models";
+import {CategoryUrlEnum} from "../../category/constants";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +18,19 @@ export class ProductService {
   getProducts = (): Observable<IProduct[]> => {
     return this.http.get<IProduct[]>(ProductUrlEnum.PRODUCT);
   }
+
+  getCategories = (): Observable<ICategory[]> => {
+    return this.http.get<ICategory[]>(CategoryUrlEnum.CATEGORY)
+  }
+
+  getSubCategories = (): Observable<ISubCategory[]> => {
+    return this.http.get<ISubCategory[]>(CategoryUrlEnum.SUB_CATEGORY)
+  }
+
+  getSubSubCategories = (): Observable<ISubSubCategory[]> => {
+    return this.http.get<ISubSubCategory[]>(CategoryUrlEnum.SUB_SUB_CATEGORY)
+  }
+
 
   createProductsFromCSV(csvFile: File, token:string):Observable<IProduct[]> {
     const formData = new FormData();
