@@ -32,11 +32,18 @@ export class ProductService {
   }
 
 
-  createProductsFromCSV(csvFile: File, token:string):Observable<IProduct[]> {
+  createProductsFromCSV = (csvFile: File, token: string): Observable<IProduct[]> => {
     const formData = new FormData();
     formData.append('csv_file', csvFile);
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
-   return  this.http.post<IProduct[]>(ProductUrlEnum.PRODUCT_CREATE_FROM_CSV, formData, {headers:myHeaders})
+    return this.http.post<IProduct[]>(ProductUrlEnum.PRODUCT_CREATE_FROM_CSV, formData, {headers: myHeaders})
+
+  }
+
+  createProduct = (product: IProduct, token: string): Observable<IProduct> => {
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+
+    return this.http.post<IProduct>(ProductUrlEnum.PRODUCT, product,{headers: myHeaders});
 
   }
 }

@@ -8,6 +8,7 @@ import {ProductTypeEnum} from "../../product-constants";
 import {ICategory, ISubCategory, ISubSubCategory} from "../../../category/category-models";
 import {countriesList} from '../../countries-list';
 import {RegexEnum} from "../../../category/constants";
+import {max} from "rxjs/operators";
 
 @Component({
   selector: 'app-product',
@@ -22,6 +23,9 @@ export class ProductComponent implements OnInit {
 
   csvFile: File | any = 0;
   productForm: FormGroup;
+  packageDimensionsForm: FormGroup;
+  itemDimensionsForm: FormGroup;
+
   accountingType = [
     {value: ProductTypeEnum.COUNTED},
     {value: ProductTypeEnum.WEIGHTED}
@@ -39,11 +43,11 @@ export class ProductComponent implements OnInit {
   subCategories: ISubCategory[] = [];
   subSubCategories: ISubSubCategory[] = [];
 
-  countries:Array<any> = countriesList;
+  countries: Array<any> = countriesList;
 
   categoriesTitleList: Array<string> = [];
 
-  token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTk2MDcxNjUsImV4cCI6MTYyODI0NzE2NX0.hVS9Esd4mVw8gHe97oUJTBd9VdyBCmddqJ1afHuS-Sk';
+  token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjgzMTY1NDUsImV4cCI6MTYzNjk1NjU0NX0.0B0nGk9yZZc2zO0Butx8J6ugMFkc_ddhi1Hwe-UobjE';
 
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -67,7 +71,22 @@ export class ProductComponent implements OnInit {
       // csv_file: ['', [Validators.required]]
     })
 
-    /***************************************************** product formGroup*/
+    /***************************************************** product formGroups*/
+    /***************************************************** packageDimensionsForm*/
+    this.packageDimensionsForm = fb.group({
+      length: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
+      width: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
+      height: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
+      weight: [0, [Validators.min(0), Validators.max(12000)]]
+    })
+    /***************************************************** itemDimensionsForm*/
+    this.itemDimensionsForm = fb.group({
+      length: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
+      width: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
+      height: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
+      weight: [0, [Validators.min(0), Validators.max(12000)]]
+    })
+    /***************************************************** productForm*/
     this.productForm = fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       accountingType: ['', [Validators.required]],
@@ -77,13 +96,23 @@ export class ProductComponent implements OnInit {
       // code: [0, [Validators.min(0)]],
       countryOfManufacture: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
       discount: [0, [Validators.min(0), Validators.max(0.99)]],
-      originalPrice:[0.1, [Validators.required, Validators.min(0.1), Validators.max(99999)]],
+      originalPrice: [0.1, [Validators.required, Validators.min(0.1), Validators.max(99999)]],
+      price: [0.1, [Validators.required, Validators.min(0.1), Validators.max(99999)]],
       equipment: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
+      shortCharacteristics: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
       fullCharacteristics: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
+      shortDescription: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
       fullDescription: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
       newFlag: [false],
-      overview_url: ['',[Validators.required, Validators.pattern(RegexEnum.url)]],
-      packageAmount:[1,[Validators.min(1), Validators.pattern('[0-9]')]]
+      promoFlag: [false],
+      overview_url: ['', [Validators.required, Validators.pattern(RegexEnum.url)]],
+      packageAmount: [1, [Validators.min(1), Validators.pattern('[0-9]')]],
+      packageDimensions: this.packageDimensionsForm,
+      itemDimensions: this.itemDimensionsForm,
+      stockCount: [1, [Validators.required, Validators.min(0), Validators.max(9999), Validators.pattern('[0-9]')]],
+      storeCount: [1, [Validators.required, Validators.min(0), Validators.max(9999), Validators.pattern('[0-9]')]],
+      provider: ['', [Validators.minLength(3), Validators.maxLength(50)]],
+      photo: [{value: [''], disabled: true}]
     })
   }
 
@@ -120,7 +149,16 @@ export class ProductComponent implements OnInit {
   onSubmitCreateProduct(productForm: FormGroup) {
     console.log(productForm);
     console.log(productForm.value);
+    delete productForm.value.level;
     console.log(this.selectedCategoryLevel);
+    this.productService.createProduct(productForm.value, this.token).subscribe(res => {
+      console.log(res);
+    },
+    error => {
+      console.log(error.error.message);
+      alert(`error: ${error.error.message}`);
+    }
+  )
   }
 
   onChangeCategoryLevel(event: any) {
@@ -136,7 +174,8 @@ export class ProductComponent implements OnInit {
         this.categoriesTitleList.length = 0;
         for (let category of this.subCategories) {
           this.categoriesTitleList.push(category.title)
-        };
+        }
+        ;
         break;
       case 'subSubCategory':
         this.categoriesTitleList.length = 0;
@@ -146,7 +185,7 @@ export class ProductComponent implements OnInit {
         break;
       default:
         break;
-        // this.categoriesTitleList = this.categories
+      // this.categoriesTitleList = this.categories
     }
 
   }
@@ -156,5 +195,10 @@ export class ProductComponent implements OnInit {
     this.productForm.controls['newFlag'].patchValue(event.checked);
     const check = this.productForm.get('newFlag');
     console.log(check);
+  }
+
+  onChangePromoFlag(event: any) {
+    this.productForm.controls['newFlag'].patchValue(event.checked);
+    const check = this.productForm.get('newFlag');
   }
 }

@@ -34,11 +34,11 @@
     <fieldset>
       <form [formGroup]="productForm">
         <legend>Create product</legend>
-          <!--================================ title ==============================================-->
+        <!--================================ title ==============================================-->
         <div>
           <mat-form-field appearance="fill" hintLabel="Max 50, Min 3 characters">
             <mat-label>Title</mat-label>
-            <input matInput formControlName="title" #title required>
+            <input matInput formControlName="title" #title minLength="3" maxlength="50" required>
             <mat-hint align="end">
               {{title.value?.length || 0}}
             </mat-hint>
@@ -96,6 +96,28 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <!--================================ originalPrice =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0.1, Max 99999">
+            <mat-label>originalPrice</mat-label>
+            <input matInput type="number" formControlName="originalPrice" #originalPrice min="0.1" max="99999" step="1"
+                   required>
+            <mat-hint align="end">
+              {{originalPrice.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ price =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0.1, Max 99999">
+            <mat-label>price</mat-label>
+            <input matInput type="number" formControlName="price" #price min="0.1" max="99999" step="1"
+                   required>
+            <mat-hint align="end">
+              {{price.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
         <!--================================ discount =======================================-->
         <div>
           <mat-form-field appearance="fill" hintLabel="Min 0, Max 0.99">
@@ -103,16 +125,6 @@
             <input matInput type="number" formControlName="discount" #discount min="0" max="0.99" step="0.1">
             <mat-hint align="end">
               {{discount.value || 0}}
-            </mat-hint>
-          </mat-form-field>
-        </div>
-        <!--================================ originalPrice =======================================-->
-        <div>
-          <mat-form-field appearance="fill" hintLabel="Min 0.1, Max 99999">
-            <mat-label>originalPrice</mat-label>
-            <input matInput type="number" formControlName="originalPrice" #originalPrice min="0.1" max="99999" step="1" required>
-            <mat-hint align="end">
-              {{originalPrice.value || 0}}
             </mat-hint>
           </mat-form-field>
         </div>
@@ -126,13 +138,36 @@
             </mat-hint>
           </mat-form-field>
         </div>
+        <!--================================ shortCharacteristics =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>shortCharacteristics</mat-label>
+            <textarea matInput formControlName="shortCharacteristics" #shortCharacteristics minlength="0"
+                      maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{shortCharacteristics.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
         <!--================================ fullCharacteristics =======================================-->
         <div>
           <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
             <mat-label>fullCharacteristics</mat-label>
-            <textarea matInput formControlName="fullCharacteristics" #fullCharacteristics minlength="0" maxlength="9999"></textarea>
+            <textarea matInput formControlName="fullCharacteristics" #fullCharacteristics minlength="0"
+                      maxlength="9999"></textarea>
             <mat-hint align="end">
               {{fullCharacteristics.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ shortDescription =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>shortDescription</mat-label>
+            <textarea matInput formControlName="shortDescription" #shortDescription minlength="0"
+                      maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{shortDescription.value?.length || 0}}
             </mat-hint>
           </mat-form-field>
         </div>
@@ -140,14 +175,21 @@
         <div>
           <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
             <mat-label>fullDescription</mat-label>
-            <textarea matInput formControlName="fullDescription" #fullDescription minlength="0" maxlength="9999"></textarea>
+            <textarea matInput formControlName="fullDescription" #fullDescription minlength="0"
+                      maxlength="9999"></textarea>
             <mat-hint align="end">
               {{fullDescription.value?.length || 0}}
             </mat-hint>
           </mat-form-field>
         </div>
         <!--================================ newFlag =======================================-->
+        <div>
           <mat-checkbox formControlName="newFlag" (change)="onChangeNewFlag($event)">newFlag</mat-checkbox>
+        </div>
+        <!--================================ promoFlag =======================================-->
+        <div>
+          <mat-checkbox formControlName="promoFlag" (change)="onChangePromoFlag($event)">promoFlag</mat-checkbox>
+        </div>
         <!--================================ overview_url =======================================-->
         <div>
           <mat-form-field appearance="fill">
@@ -165,7 +207,113 @@
             </mat-hint>
           </mat-form-field>
         </div>
+        <!--================================ packageDimensionsForm =======================================-->
+        <div formGroupName="packageDimensions">packageDimensions
+          <!--          <div>-->
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>length</mat-label>
+            <input matInput type="number" formControlName="length" #length min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{length.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>width</mat-label>
+            <input matInput type="number" formControlName="width" #width min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{width.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>height</mat-label>
+            <input matInput type="number" formControlName="height" #height min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{height.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>weight</mat-label>
+            <input matInput type="number" formControlName="weight" #weight min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{weight.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <!--          </div>-->
 
+
+        </div>
+        <!--================================ itemDimensionsForm =======================================-->
+        <div formGroupName="itemDimensions">itemDimensions
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>length</mat-label>
+            <input matInput type="number" formControlName="length" #length min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{length.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>width</mat-label>
+            <input matInput type="number" formControlName="width" #width min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{width.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>height</mat-label>
+            <input matInput type="number" formControlName="height" #height min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{height.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>weight</mat-label>
+            <input matInput type="number" formControlName="weight" #weight min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{weight.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+
+
+        </div>
+        <!--================================ stockCount =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 1, Max 99999">
+            <mat-label>stockCount</mat-label>
+            <input matInput type="number" formControlName="stockCount" #stockCount min="1" max="99999" step="1"
+                   required>
+            <mat-hint align="end">
+              {{stockCount.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ storeCount =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 1, Max 99999">
+            <mat-label>storeCount</mat-label>
+            <input matInput type="number" formControlName="storeCount" #storeCount min="1" max="99999" step="1"
+                   required>
+            <mat-hint align="end">
+              {{storeCount.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ provider ==============================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 3, Max 50 characters">
+            <mat-label>provider</mat-label>
+            <input matInput formControlName="provider" #provider minLength="3" maxlength="50" required>
+            <mat-hint align="end">
+              {{title.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ photo ==============================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Photo</mat-label>
+            <input matInput formControlName="photo">
+          </mat-form-field>
+        </div>
 
 
         <div>
