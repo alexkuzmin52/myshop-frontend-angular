@@ -202,7 +202,7 @@ export class ProductComponent implements OnInit {
         }
         const uploadFile = getFileFromBlob(res, 'test.csv');
         console.log(uploadFile);
-        fileSaver.saveAs(res, 'test2.csv');
+        fileSaver.saveAs(res, 'product.csv');
 
       },
       error => {
