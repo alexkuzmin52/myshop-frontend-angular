@@ -4,9 +4,11 @@
   <button mat-button (click)="onHome()">Home</button>
   <button mat-button [matMenuTriggerFor]="createProductMenu">Create</button>
   <mat-menu #createProductMenu>
-    <button mat-menu-item>from Form</button>
+    <button mat-menu-item (click)="onCreateProductsFromForm()">from Form</button>
     <button mat-menu-item (click)="onCreateProductsFromCSV()">from CSV</button>
   </mat-menu>
+  <button mat-button (click)="onGetCsv()">CSV</button>
+
 </mat-toolbar>
 
 <div class="container">
@@ -30,7 +32,7 @@
     </fieldset>
   </div>
   <!--  ******************************** create product form ********************************-->
-  <div>
+  <div *ngIf="productAction=='create product'">
     <fieldset>
       <form [formGroup]="productForm">
         <legend>Create product</legend>
@@ -201,9 +203,9 @@
         <div>
           <mat-form-field appearance="fill" hintLabel="Min 1">
             <mat-label>packageAmount</mat-label>
-            <input matInput type="number" formControlName="packageAmount" #originalPrice min="1" step="1" required>
+            <input matInput type="number" formControlName="packageAmount" #packageAmount min="1" step="1" required>
             <mat-hint align="end">
-              {{originalPrice.value || 0}}
+              {{packageAmount.value || 0}}
             </mat-hint>
           </mat-form-field>
         </div>

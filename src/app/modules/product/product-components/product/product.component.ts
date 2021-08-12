@@ -8,7 +8,7 @@ import {ProductTypeEnum} from "../../product-constants";
 import {ICategory, ISubCategory, ISubSubCategory} from "../../../category/category-models";
 import {countriesList} from '../../countries-list';
 import {RegexEnum} from "../../../category/constants";
-import {max} from "rxjs/operators";
+import * as fileSaver from 'file-saver';
 
 @Component({
   selector: 'app-product',
@@ -21,7 +21,7 @@ export class ProductComponent implements OnInit {
   productAction: string = ProductActionEnum.PRODUCT_NOT_ACTION
   createProductCSV: FormGroup;
 
-  csvFile: File | any = 0;
+  csvFile: File | any = null;
   productForm: FormGroup;
   packageDimensionsForm: FormGroup;
   itemDimensionsForm: FormGroup;
@@ -37,7 +37,7 @@ export class ProductComponent implements OnInit {
   ]
   selectedAccountingType: ProductTypeEnum;
   selectedCategoryLevel: string = '';
-  selectedCategoryTitle: string = '';
+  // selectedCategoryTitle: string = '';
 
   categories: ICategory[] = [];
   subCategories: ISubCategory[] = [];
@@ -117,7 +117,7 @@ export class ProductComponent implements OnInit {
   }
 
   onHome() {
-    this.router.navigate([''])
+    this.router.navigate(['']);
   }
 
   ngOnInit(): void {
@@ -126,7 +126,6 @@ export class ProductComponent implements OnInit {
   onCreateProductsFromCSV() {
     this.productAction = ProductActionEnum.CREATE_PRODUCT_FROM_CSV;
   }
-
   onChangeCsvFile(event: any) {
     let fileList: FileList = event.target.files;
     if (fileList.length) {
@@ -134,7 +133,6 @@ export class ProductComponent implements OnInit {
       this.createProductCSV.controls['file_name'].setValue(this.csvFile.name);
     }
   }
-
   onSubmitCreateProductsFromCSV() {
     this.productService.createProductsFromCSV(this.csvFile, this.token).subscribe(res => {
         console.log(res);
@@ -147,18 +145,15 @@ export class ProductComponent implements OnInit {
   }
 
   onSubmitCreateProduct(productForm: FormGroup) {
-    console.log(productForm);
-    console.log(productForm.value);
     delete productForm.value.level;
-    console.log(this.selectedCategoryLevel);
     this.productService.createProduct(productForm.value, this.token).subscribe(res => {
-      console.log(res);
-    },
-    error => {
-      console.log(error.error.message);
-      alert(`error: ${error.error.message}`);
-    }
-  )
+        console.log(res);
+      },
+      error => {
+        console.log(error.error.message);
+        alert(`error: ${error.error.message}`);
+      }
+    )
   }
 
   onChangeCategoryLevel(event: any) {
@@ -173,32 +168,46 @@ export class ProductComponent implements OnInit {
       case 'subCategory':
         this.categoriesTitleList.length = 0;
         for (let category of this.subCategories) {
-          this.categoriesTitleList.push(category.title)
+          this.categoriesTitleList.push(category.title);
         }
-        ;
         break;
       case 'subSubCategory':
         this.categoriesTitleList.length = 0;
         for (let category of this.subSubCategories) {
-          this.categoriesTitleList.push(category.title)
+          this.categoriesTitleList.push(category.title);
         }
         break;
       default:
         break;
-      // this.categoriesTitleList = this.categories
     }
-
   }
 
   onChangeNewFlag(event: any) {
-    console.log(event);
     this.productForm.controls['newFlag'].patchValue(event.checked);
-    const check = this.productForm.get('newFlag');
-    console.log(check);
   }
 
   onChangePromoFlag(event: any) {
     this.productForm.controls['newFlag'].patchValue(event.checked);
     const check = this.productForm.get('newFlag');
+  }
+
+  onCreateProductsFromForm() {
+    this.productAction = ProductActionEnum.CREATE_PRODUCT_FROM_FORM;
+  }
+
+  onGetCsv() {
+    this.productService.getProductCsvFile(this.token).subscribe(res => {
+        const getFileFromBlob = (uploadedBlob: Blob, fileName: string): File => {
+          return new File([uploadedBlob], fileName, {lastModified: new Date().getTime(), type: uploadedBlob.type})
+        }
+        const uploadFile = getFileFromBlob(res, 'test.csv');
+        console.log(uploadFile);
+        fileSaver.saveAs(res, 'test2.csv');
+
+      },
+      error => {
+        console.log(error.error.message);
+        alert(`error: ${error.error.message}`);
+      })
   }
 }

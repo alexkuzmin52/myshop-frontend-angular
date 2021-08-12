@@ -42,8 +42,12 @@ export class ProductService {
 
   createProduct = (product: IProduct, token: string): Observable<IProduct> => {
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return this.http.post<IProduct>(ProductUrlEnum.PRODUCT, product, {headers: myHeaders});
 
-    return this.http.post<IProduct>(ProductUrlEnum.PRODUCT, product,{headers: myHeaders});
+  }
 
+  getProductCsvFile = (token: string):Observable<Blob> => {
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return this.http.get(ProductUrlEnum.PRODUCT_GET_CSV, {headers: myHeaders, responseType: 'blob'});
   }
 }
