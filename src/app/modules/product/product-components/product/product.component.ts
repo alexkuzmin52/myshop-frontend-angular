@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {IProduct} from "../../product-models/product-interface";
 import {ProductActionEnum} from "../../product-constants/product-action-enum";
@@ -9,16 +9,26 @@ import {ICategory, ISubCategory, ISubSubCategory} from "../../../category/catego
 import {countriesList} from '../../countries-list';
 import {RegexEnum} from "../../../category/constants";
 import * as fileSaver from 'file-saver';
+import {MatSidenav} from "@angular/material/sidenav";
+import {BreakpointObserver} from "@angular/cdk/layout";
+import {delay} from "rxjs/operators";
+import {ProductMenuActionEnum} from "../../product-constants/product-menu-action-enum";
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })
-export class ProductComponent implements OnInit {
+export class ProductComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSidenav)
+  sidenav!: MatSidenav;
+
+
   products: IProduct[];
   product: IProduct = {} as IProduct;
-  productAction: string = ProductActionEnum.PRODUCT_NOT_ACTION
+  productAction: string = ProductActionEnum.PRODUCT_NOT_ACTION;
+  productMenuAction: string = ProductMenuActionEnum.PRODUCT_MENU_NOT_ACTION;
   createProductCSV: FormGroup;
 
   csvFile: File | any = null;
@@ -53,7 +63,8 @@ export class ProductComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private fb: FormBuilder,
-              private productService: ProductService) {
+              private productService: ProductService,
+              private menuToggleObserver: BreakpointObserver) {
     this.categories = activatedRoute.snapshot.data.data[0];
     this.subCategories = activatedRoute.snapshot.data.data[1];
     this.subSubCategories = activatedRoute.snapshot.data.data[2];
@@ -116,11 +127,27 @@ export class ProductComponent implements OnInit {
     })
   }
 
-  onHome() {
-    this.router.navigate(['']);
-  }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit():any {
+    this.menuToggleObserver
+      .observe(['(max-width: 800px)'])
+      .pipe(delay(1))
+      .subscribe((res) => {
+        if (res.matches) {
+          this.sidenav.mode = 'over';
+          this.sidenav.close();
+        } else {
+          this.sidenav.mode = 'side';
+          this.sidenav.open();
+        }
+      });
+  }
+
+  onHome() {
+    this.router.navigate(['']);
   }
 
   onCreateProductsFromCSV() {
@@ -209,5 +236,13 @@ export class ProductComponent implements OnInit {
         console.log(error.error.message);
         alert(`error: ${error.error.message}`);
       })
+  }
+
+  onProductCreate() {
+    this.productMenuAction=ProductMenuActionEnum.CREATE_PRODUCT_MENU;
+  }
+
+  onProductEdit() {
+    this.productMenuAction=ProductMenuActionEnum.EDIT_PRODUCT_MENU;
   }
 }

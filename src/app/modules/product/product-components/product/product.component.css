@@ -1,3 +1,29 @@
 .container {
   font-size: 14px;
 }
+.sidenav {
+  background-color: #41e2c6;
+}
+.side-menu {
+  width: 250px;
+}
+mat-sidenav-container {
+  height:  calc(100vh - 40px);
+}
+mat-sidenav {
+  margin-top: 20px;
+  /*margin: 16px;*/
+  /*width: 200px;*/
+  border-right: none;
+  background: #3952b5;
+  color: white;
+  /*border-radius: 10px;*/
+  /*padding: 16px;*/
+  /*text-align: center;*/
+}
+mat-toolbar {
+  height: 40px;
+}
+.menu-button {
+  display: block;
+}
