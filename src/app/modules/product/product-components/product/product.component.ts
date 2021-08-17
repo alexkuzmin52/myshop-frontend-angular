@@ -29,12 +29,13 @@ export class ProductComponent implements OnInit, AfterViewInit {
   product: IProduct = {} as IProduct;
   productAction: string = ProductActionEnum.PRODUCT_NOT_ACTION;
   productMenuAction: string = ProductMenuActionEnum.PRODUCT_MENU_NOT_ACTION;
-  createProductCSV: FormGroup;
 
   csvFile: File | any = null;
+
   productForm: FormGroup;
   packageDimensionsForm: FormGroup;
   itemDimensionsForm: FormGroup;
+  createProductCSV: FormGroup;
 
   accountingType = [
     {value: ProductTypeEnum.COUNTED},
@@ -47,7 +48,6 @@ export class ProductComponent implements OnInit, AfterViewInit {
   ]
   selectedAccountingType: ProductTypeEnum;
   selectedCategoryLevel: string = '';
-  // selectedCategoryTitle: string = '';
 
   categories: ICategory[] = [];
   subCategories: ISubCategory[] = [];
@@ -68,36 +68,26 @@ export class ProductComponent implements OnInit, AfterViewInit {
     this.categories = activatedRoute.snapshot.data.data[0];
     this.subCategories = activatedRoute.snapshot.data.data[1];
     this.subSubCategories = activatedRoute.snapshot.data.data[2];
-
     this.products = activatedRoute.snapshot.data.data[3];
-    console.log(this.products);
-    console.log(this.categories);
-    console.log(this.subCategories);
-    console.log(this.subSubCategories);
 
     this.selectedAccountingType = ProductTypeEnum.COUNTED;
 
-    this.createProductCSV = fb.group({
-      file_name: [{value: '', disabled: true}]
-      // csv_file: ['', [Validators.required]]
-    })
-
-    /***************************************************** product formGroups*/
-    /***************************************************** packageDimensionsForm*/
+    /***************************************************** product formGroups */
+    /***************************************************** packageDimensions Form */
     this.packageDimensionsForm = fb.group({
       length: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
       width: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
       height: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
       weight: [0, [Validators.min(0), Validators.max(12000)]]
     })
-    /***************************************************** itemDimensionsForm*/
+    /***************************************************** itemDimensions Form */
     this.itemDimensionsForm = fb.group({
       length: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
       width: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
       height: [0, [Validators.min(0), Validators.max(12000), Validators.pattern('[0-9]')]],
       weight: [0, [Validators.min(0), Validators.max(12000)]]
     })
-    /***************************************************** productForm*/
+    /***************************************************** create product Form */
     this.productForm = fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       accountingType: ['', [Validators.required]],
@@ -124,6 +114,10 @@ export class ProductComponent implements OnInit, AfterViewInit {
       storeCount: [1, [Validators.required, Validators.min(0), Validators.max(9999), Validators.pattern('[0-9]')]],
       provider: ['', [Validators.minLength(3), Validators.maxLength(50)]],
       photo: [{value: [''], disabled: true}]
+    })
+    /***************************************************** create product CSV Form */
+    this.createProductCSV = fb.group({
+      file_name: [{value: '', disabled: true}]
     })
   }
 
@@ -152,6 +146,8 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
   onCreateProductsFromCSV() {
     this.productAction = ProductActionEnum.CREATE_PRODUCT_FROM_CSV;
+    this.createProductCSV.controls['file_name'].setValue('')
+    this.csvFile = 0;
   }
   onChangeCsvFile(event: any) {
     let fileList: FileList = event.target.files;
@@ -161,6 +157,10 @@ export class ProductComponent implements OnInit, AfterViewInit {
     }
   }
   onSubmitCreateProductsFromCSV() {
+    if (!this.csvFile) {
+      alert('No file selected');
+      return;
+    }
     this.productService.createProductsFromCSV(this.csvFile, this.token).subscribe(res => {
         console.log(res);
       },

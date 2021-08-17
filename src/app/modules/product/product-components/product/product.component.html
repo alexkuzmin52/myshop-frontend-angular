@@ -1,3 +1,4 @@
+<!--  /======================================== TOOLBAR =======================================/-->
 <mat-toolbar color="primary">
   <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
     <mat-icon *ngIf="!sidenav.opened">
@@ -12,12 +13,12 @@
   <button mat-button (click)="onProductCreate()">Create</button>
   <button mat-button (click)="onProductEdit()">Edit</button>
 </mat-toolbar>
-
+<!--  /======================================== SIDE-NAV-CONTAINER ============================/-->
 <div class="container">
 </div>
 <mat-sidenav-container>
+    <!--  /************************************ sidenav *************************************/-->
   <mat-sidenav mode="side" #sidenav="matSidenav" class="side-menu" opened>
-    <!--  ******************************** Side Menu ******************************************-->
     <div *ngIf="productMenuAction=='create'">
     <ng-container *ngTemplateOutlet="productCreateMenu"></ng-container>
     </div>
@@ -27,8 +28,8 @@
     <div *ngIf="productAction=='some create'">
       <ng-container *ngTemplateOutlet="categoryList"></ng-container>
     </div>
-
   </mat-sidenav>
+     <!--  /************************************ sidenav-content *****************************/-->
   <mat-sidenav-content class="sidenav">Main Content
     <!--  ******************************** create product form ********************************-->
     <div *ngIf="productAction=='create product'">
@@ -327,7 +328,7 @@
         </form>
       </fieldset>
     </div>
-    <!--  ******************************** create product form ********************************-->
+    <!--  ******************************** create product csv form ****************************-->
     <div *ngIf="productAction =='create product csv'">
       <fieldset>
         <form [formGroup]="createProductCSV">
@@ -348,13 +349,15 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
+<!--  /========================================== TEMPLATES ===================================/-->
+<!--  /****************************************** category list *******************************/-->
 <ng-template #categoryList>
   <div *ngFor="let category of categories">
     <button mat-button class="menu-button">{{category.title}}</button>
     <mat-divider></mat-divider>
   </div>
 </ng-template>
+<!--  /****************************************** create product side menu *******************/-->
 <ng-template #productCreateMenu>
   <div>
     <button mat-button class="menu-button" (click)="onCreateProductsFromForm()">Product form</button>
@@ -363,6 +366,7 @@
     <mat-divider></mat-divider>
   </div>
 </ng-template>
+<!--  /****************************************** edit product side menu *******************/-->
 <ng-template #productEditMenu>
   <div>
     <button mat-button class="menu-button">menu1</button>

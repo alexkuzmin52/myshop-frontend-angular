@@ -13,6 +13,9 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatToolbarModule} from "@angular/material/toolbar";
 
 import { CategoryComponent } from './category-components/category/category.component';
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatIconModule} from "@angular/material/icon";
+import {MatDividerModule} from "@angular/material/divider";
 
 @NgModule({
   declarations: [
@@ -32,7 +35,10 @@ import { CategoryComponent } from './category-components/category/category.compo
     MatInputModule,
     MatMenuModule,
     MatSelectModule,
-    MatCardModule
+    MatCardModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatDividerModule
   ]
 })
 export class CategoryModule { }

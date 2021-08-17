@@ -5,6 +5,8 @@ import {Observable} from "rxjs";
 import {CategoryUrlEnum} from "../constants";
 import {HeaderRequestEnum} from "../constants";
 import {ICategory, ISubCategory, ISubSubCategory} from "../category-models";
+import {IProduct} from "../../product/product-models/product-interface";
+import {ProductUrlEnum} from "../../product/product-constants";
 
 @Injectable({
   providedIn: 'root'
@@ -119,5 +121,30 @@ export class CategoryService {
   editSubSubCategory = (subSubCategory: ISubSubCategory, subSubCategoryID: number, token: string): Observable<ISubSubCategory> => {
     const myHeader = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token)
    return  this.http.put<ISubSubCategory>(CategoryUrlEnum.SUB_SUB_CATEGORY + `/${subSubCategoryID}`,subSubCategory, {headers: myHeader});
+  }
+
+  createCategoryFromCSV(csvFile: any, token: string) {
+    const formData = new FormData();
+    formData.append('csv_file', csvFile);
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return this.http.post<ICategory[]>(CategoryUrlEnum.CATEGORY_CSV, formData, {headers: myHeaders})
+
+
+  }
+  createSubCategoryFromCSV(csvFile: any, token: string) {
+    const formData = new FormData();
+    formData.append('csv_file', csvFile);
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return this.http.post<ISubCategory[]>(CategoryUrlEnum.SUB_CATEGORY_CSV, formData, {headers: myHeaders})
+
+
+  }
+  createSubSubCategoryFromCSV(csvFile: any, token: string) {
+    const formData = new FormData();
+    formData.append('csv_file', csvFile);
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return this.http.post<ISubSubCategory[]>(CategoryUrlEnum.SUB_SUB_CATEGORY_CSV, formData, {headers: myHeaders})
+
+
   }
 }

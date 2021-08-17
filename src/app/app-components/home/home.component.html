@@ -1,9 +1,16 @@
-<p>home works!</p>
 <mat-toolbar color="primary">
-  <button mat-icon-button>
-    <mat-icon>menu</mat-icon>
-  </button>
-<!--  <span>Admin</span>-->
+  <span>Admin</span>
+<div #sidenavRow>
   <button mat-button (click)="onCategory()">Категории</button>
   <button mat-button (click)="onProduct()">Продукты</button>
+</div>
+  <div #sidenavCol class="home-side-menu">
+    <div>
+      <button mat-button (click)="onCategory()">Категории</button>
+    </div>
+    <div>
+      <button mat-button (click)="onProduct()">Продукты</button>
+    </div>
+  </div>
 </mat-toolbar>
+

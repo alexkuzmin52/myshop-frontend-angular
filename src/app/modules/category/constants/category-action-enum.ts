@@ -1,8 +1,11 @@
 export enum CategoryActionEnum {
   NOT_ACTIONS = '',
   CREATE_CATEGORY = 'create category',
+  CREATE_CATEGORY_FROM_CSV = 'create category from csv',
   CREATE_SUB_CATEGORY = 'create subCategory',
+  CREATE_SUB_CATEGORY_FROM_CSV = 'create subCategory from csv',
   CREATE_SUB_SUB_CATEGORY = 'create subSubCategory',
+  CREATE_SUB_SUB_CATEGORY_FROM_CSV = 'create subSubCategory from csv',
   DELETE_CATEGORY = 'delete category',
   DELETE_SUB_CATEGORY = 'delete subCategory',
   DELETE_SUB_SUB_CATEGORY = 'delete subSubCategory',
