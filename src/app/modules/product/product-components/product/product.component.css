@@ -15,15 +15,24 @@ mat-sidenav {
   /*margin: 16px;*/
   /*width: 200px;*/
   border-right: none;
-  background: #3952b5;
-  color: white;
+  /*background: #3952b5;*/
+  color: #0a06aa;
   /*border-radius: 10px;*/
   /*padding: 16px;*/
   /*text-align: center;*/
+  /*font-max-size: 10px;*/
 }
 mat-toolbar {
   height: 40px;
 }
 .menu-button {
   display: block;
+}
+.item-card {
+  max-width: 250px;
+  background-color: #eed8bc;
+}
+.menu-select {
+  /*background-color: #c23434;*/
+  /*color: white;*/
 }

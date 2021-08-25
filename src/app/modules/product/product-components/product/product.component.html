@@ -1,3 +1,4 @@
+<!--<p>{{1000 | currency:'UAH':"symbol-narrow":"1.0"}}</p>-->
 <!--  /======================================== TOOLBAR =======================================/-->
 <mat-toolbar color="primary">
   <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
@@ -347,6 +348,26 @@
         </form>
       </fieldset>
     </div>
+
+    <div *ngIf="productMenuAction=='edit'">
+      <div *ngFor="let item of products">
+        <mat-card class="item-card">
+          <mat-card-header>
+            <img src="#" alt="photo">
+          </mat-card-header>
+          <mat-card-content>
+           <p>{{item.title}}</p>
+           <div>{{item.price | currency:'UAH':"symbol-narrow":"1.2-2"}}</div>
+<!--            <div>{{item.price | currency:'UAH':"грн":"2.2-2"}}</div>-->
+<!--            <div>{{item.price | number: "1."}} грн</div>-->
+
+          </mat-card-content>
+          <mat-card-actions>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
   </mat-sidenav-content>
 </mat-sidenav-container>
 <!--  /========================================== TEMPLATES ===================================/-->
@@ -369,9 +390,48 @@
 <!--  /****************************************** edit product side menu *******************/-->
 <ng-template #productEditMenu>
   <div>
-    <button mat-button class="menu-button">menu1</button>
-    <mat-divider></mat-divider>
-    <button mat-button class="menu-button">menu2</button>
+    <form [formGroup]="productFilterForm">
+      <mat-form-field appearance="fill"  style="font-size: 14px">
+        <mat-label>
+          <span style="">Category</span></mat-label>
+        <mat-select class="menu-select" formControlName="category"  (selectionChange)="onChangeProductFilterForm()">
+          <mat-option>All</mat-option>
+          <mat-option *ngFor="let item of listProductCategory"  class="menu-select" [value]="item">
+            {{item}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill"  style="font-size: 14px">
+        <mat-label>
+          <span style="">Brand</span></mat-label>
+        <mat-select class="menu-select" formControlName="brand"  (selectionChange)="onChangeProductFilterForm()">
+          <mat-option>All</mat-option>
+          <mat-option *ngFor="let item of listProductBrand"  class="menu-select" [value]="item">
+            {{item}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+<!--      <button (click)="onSubmitProductFilterForm(productFilterForm)">Apply</button>-->
+      <button mat-button class="menu-button" type="reset" (click)="onCancelFilters()">Cancel filters</button>
+
+    </form>
+<!--    <mat-divider></mat-divider>-->
+<!--    <button mat-button class="menu-button">menu2</button>-->
     <mat-divider></mat-divider>
   </div>
+</ng-template>
+
+
+<ng-template #itemCard>
+  <mat-card>
+    <mat-card-header>
+      <img src="" alt="">
+    </mat-card-header>
+    <mat-card-content>
+{{product.title}}
+    </mat-card-content>
+    <mat-card-actions>
+
+    </mat-card-actions>
+  </mat-card>
 </ng-template>

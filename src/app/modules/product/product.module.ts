@@ -1,5 +1,7 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID,NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import localRu from '@angular/common/locales/ru-UA'
+import {registerLocaleData} from "@angular/common";
 
 import { ProductRoutingModule } from './product-routing.module';
 import { ProductComponent } from './product-components/product/product.component';
@@ -16,6 +18,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDividerModule} from "@angular/material/divider";
 
+registerLocaleData(localRu, 'ru')
 
 @NgModule({
   declarations: [
@@ -37,8 +40,12 @@ import {MatDividerModule} from "@angular/material/divider";
     MatCardModule,
     MatSidenavModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    MatCardModule
 
+  ],
+  providers: [
+    {provide: LOCALE_ID, useValue: 'ru'}
   ]
 })
 export class ProductModule { }

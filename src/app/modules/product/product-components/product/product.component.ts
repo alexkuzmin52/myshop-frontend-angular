@@ -1,18 +1,20 @@
-import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import * as fileSaver from 'file-saver';
 import {ActivatedRoute, Router} from "@angular/router";
+import {BreakpointObserver} from "@angular/cdk/layout";
+import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {MatSidenav} from "@angular/material/sidenav";
+import {delay} from "rxjs/operators";
+
+import {ICategory, ISubCategory, ISubSubCategory} from "../../../category/category-models";
+import {IProductFilter} from "../../product-models/product-filter-interface";
 import {IProduct} from "../../product-models/product-interface";
 import {ProductActionEnum} from "../../product-constants/product-action-enum";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ProductMenuActionEnum} from "../../product-constants/product-menu-action-enum";
 import {ProductService} from "../../product-services/product.service";
 import {ProductTypeEnum} from "../../product-constants";
-import {ICategory, ISubCategory, ISubSubCategory} from "../../../category/category-models";
-import {countriesList} from '../../countries-list';
 import {RegexEnum} from "../../../category/constants";
-import * as fileSaver from 'file-saver';
-import {MatSidenav} from "@angular/material/sidenav";
-import {BreakpointObserver} from "@angular/cdk/layout";
-import {delay} from "rxjs/operators";
-import {ProductMenuActionEnum} from "../../product-constants/product-menu-action-enum";
+import {countriesList} from '../../countries-list';
 
 @Component({
   selector: 'app-product',
@@ -23,19 +25,20 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
-
-
   products: IProduct[];
+  productFilter: IProductFilter = {};
   product: IProduct = {} as IProduct;
   productAction: string = ProductActionEnum.PRODUCT_NOT_ACTION;
   productMenuAction: string = ProductMenuActionEnum.PRODUCT_MENU_NOT_ACTION;
-
+  listProductCategory: Array<string> = [''];
+  listProductBrand: Array<string> = [''];
   csvFile: File | any = null;
 
   productForm: FormGroup;
   packageDimensionsForm: FormGroup;
   itemDimensionsForm: FormGroup;
   createProductCSV: FormGroup;
+  productFilterForm: FormGroup;
 
   accountingType = [
     {value: ProductTypeEnum.COUNTED},
@@ -115,6 +118,34 @@ export class ProductComponent implements OnInit, AfterViewInit {
       provider: ['', [Validators.minLength(3), Validators.maxLength(50)]],
       photo: [{value: [''], disabled: true}]
     })
+    /***************************************************** productFilter  Form */
+    this.productFilterForm = fb.group({
+      // title: ['all', [Validators.minLength(3), Validators.maxLength(50)]],
+      // accountingType: ['', [Validators.required]],
+      brand: ['', [Validators.minLength(2), Validators.maxLength(30)]],
+      // level: ['', [Validators.required]],
+      category: ['', [Validators.minLength(2), Validators.maxLength(30)]],
+      // // code: [0, [Validators.min(0)]],
+      // countryOfManufacture: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+      // discount: [0, [Validators.min(0), Validators.max(0.99)]],
+      // originalPrice: [0.1, [Validators.required, Validators.min(0.1), Validators.max(99999)]],
+      // price: [0.1, [Validators.required, Validators.min(0.1), Validators.max(99999)]],
+      // equipment: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
+      // shortCharacteristics: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
+      // fullCharacteristics: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
+      // shortDescription: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
+      // fullDescription: ['', [Validators.minLength(0), Validators.maxLength(9999)]],
+      // newFlag: [false],
+      // promoFlag: [false],
+      // overview_url: ['', [Validators.required, Validators.pattern(RegexEnum.url)]],
+      // packageAmount: [1, [Validators.min(1), Validators.pattern('[0-9]')]],
+      // packageDimensions: this.packageDimensionsForm,
+      // itemDimensions: this.itemDimensionsForm,
+      // stockCount: [1, [Validators.required, Validators.min(0), Validators.max(9999), Validators.pattern('[0-9]')]],
+      // storeCount: [1, [Validators.required, Validators.min(0), Validators.max(9999), Validators.pattern('[0-9]')]],
+      // provider: ['', [Validators.minLength(3), Validators.maxLength(50)]],
+      // photo: [{value: [''], disabled: true}]
+    })
     /***************************************************** create product CSV Form */
     this.createProductCSV = fb.group({
       file_name: [{value: '', disabled: true}]
@@ -123,9 +154,13 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    this.productFilterForm.valueChanges.subscribe(res => {
+     this.productFilter = Object.fromEntries(Object.entries(res).filter(([n,v])=>!!v));
+      console.log(this.productFilter); //TODO
+    })
   }
 
-  ngAfterViewInit():any {
+  ngAfterViewInit(): any {
     this.menuToggleObserver
       .observe(['(max-width: 800px)'])
       .pipe(delay(1))
@@ -149,6 +184,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
     this.createProductCSV.controls['file_name'].setValue('')
     this.csvFile = 0;
   }
+
   onChangeCsvFile(event: any) {
     let fileList: FileList = event.target.files;
     if (fileList.length) {
@@ -156,6 +192,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
       this.createProductCSV.controls['file_name'].setValue(this.csvFile.name);
     }
   }
+
   onSubmitCreateProductsFromCSV() {
     if (!this.csvFile) {
       alert('No file selected');
@@ -184,7 +221,6 @@ export class ProductComponent implements OnInit, AfterViewInit {
   }
 
   onChangeCategoryLevel(event: any) {
-    console.log(event.value);
     switch (event.value) {
       case 'category':
         this.categoriesTitleList.length = 0;
@@ -236,13 +272,32 @@ export class ProductComponent implements OnInit, AfterViewInit {
         console.log(error.error.message);
         alert(`error: ${error.error.message}`);
       })
-  }
+  }//TODO
 
   onProductCreate() {
-    this.productMenuAction=ProductMenuActionEnum.CREATE_PRODUCT_MENU;
+    this.productMenuAction = ProductMenuActionEnum.CREATE_PRODUCT_MENU;
   }
 
   onProductEdit() {
-    this.productMenuAction=ProductMenuActionEnum.EDIT_PRODUCT_MENU;
+    this.productMenuAction = ProductMenuActionEnum.EDIT_PRODUCT_MENU;
+    this.onChangeProductFilterForm();
+  }
+
+  onChangeProductFilterForm() {
+    console.log(this.productFilter);
+    this.productService.getProductsByFilter(this.productFilter)
+      .subscribe(res => {
+        this.products = res;
+        this.listProductCategory = Array.from(new Set(this.products.map((value) => value.category).sort())) ;
+        this.listProductBrand = Array.from(new Set(this.products.map((value) => value.brand).sort())) ;
+      }, error => {
+        console.log(error.error.message);
+        alert(`error: ${error.error.message}`);
+      });
+  }
+
+  onCancelFilters() {
+    this.productFilter = {};
+    this.onChangeProductFilterForm();
   }
 }
