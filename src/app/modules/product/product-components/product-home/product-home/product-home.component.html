@@ -1,0 +1,104 @@
+<p>home product work</p>
+<!--  /======================================== TOOLBAR =======================================/-->
+<mat-toolbar color="primary">
+  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+    <mat-icon *ngIf="!sidenav.opened">
+      menu
+    </mat-icon>
+    <mat-icon *ngIf="sidenav.opened">
+      close
+    </mat-icon>
+  </button>
+  <span style="color: yellow">Product</span>
+  <button mat-button (click)="onHome()">Home</button>
+  <button mat-button (click)="onProductCreate()">Create</button>
+<!--  <button mat-button (click)="onProductEdit()">Edit</button>-->
+
+</mat-toolbar>
+<!--  /======================================== SIDE-NAV-CONTAINER ============================/-->
+<div class="container">
+</div>
+<mat-sidenav-container>
+  <!--  /************************************ sidenav *************************************/-->
+  <mat-sidenav mode="side" #sidenav="matSidenav" class="side-menu" opened>
+      <ng-container *ngTemplateOutlet="productEditMenu"></ng-container>
+  </mat-sidenav>
+  <!--  /************************************ sidenav-content *****************************/-->
+  <mat-sidenav-content class="sidenav">Main Content
+    <!--  ******************************** products by filter *********************************-->
+
+    <div>
+      <mat-grid-list cols="6" rowHeight="4:3">
+        <mat-grid-tile *ngFor="let item of products">
+          <mat-card class="item-card-grid">
+            <mat-card-header>
+              <img src="#" alt="photo">
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{item.category}}</p>
+              <p>{{item.title}}</p>
+              <p>{{item.brand}}</p>
+              <div>{{item.price | currency:'UAH':"symbol-narrow":"1.2-2"}}</div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-raised-button color="primary" (click)="onItemEdit(item)">Edit</button>
+              <button mat-raised-button color="primary" (click)="onItemDelete(item.id)">Delete</button>
+            </mat-card-actions>
+          </mat-card>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<!--  /========================================== TEMPLATES ===================================/-->
+<!--  /****************************************** edit product side menu **********************/-->
+<ng-template #productEditMenu>
+  <div>
+    <form [formGroup]="productFilterForm">
+      <mat-form-field appearance="fill" style="font-size: 14px">
+        <mat-label>
+          <span style="">Category</span></mat-label>
+        <mat-select class="menu-select" formControlName="category" (selectionChange)="onChangeProductFilterForm()">
+          <mat-option>All</mat-option>
+          <mat-option *ngFor="let item of listProductCategory" class="menu-select" [value]="item">
+            {{item}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="font-size: 14px">
+        <mat-label>
+          <span style="">Brand</span></mat-label>
+        <mat-select class="menu-select" formControlName="brand" (selectionChange)="onChangeProductFilterForm()">
+          <mat-option>All</mat-option>
+          <mat-option *ngFor="let item of listProductBrand" class="menu-select" [value]="item">
+            {{item}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="font-size: 14px" hintLabel="Min {{minMaxPrice.min}}, Max {{minMaxPrice.max}}">
+        <mat-label>From minimum price</mat-label>
+        <input matInput formControlName="priceGte" (blur)="onChangeProductFilterForm()" #priceGte>
+        <mat-hint align="end">
+          {{ priceGte.value || 0}}
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="font-size: 14px" hintLabel="Min {{minMaxPrice.min}}, Max {{minMaxPrice.max}}">
+        <mat-label>From maximum price</mat-label>
+        <input matInput formControlName="priceLte" (blur)="onChangeProductFilterForm()" #priceLte>
+        <mat-hint align="end">
+          {{ priceLte.value || 0}}
+        </mat-hint>
+      </mat-form-field>
+      <div>
+        <mat-checkbox formControlName="newFlag" (change)="onChangeNewFlag($event)">Only new</mat-checkbox>
+      </div>
+      <div>
+        <mat-checkbox formControlName="promoFlag" (change)="onChangePromoFlag($event)">Only promo</mat-checkbox>
+      </div>
+      <button mat-button class="menu-button" type="reset" (click)="onCancelFilters()">Cancel filters</button>
+    </form>
+    <mat-divider></mat-divider>
+  </div>
+</ng-template>
+
+

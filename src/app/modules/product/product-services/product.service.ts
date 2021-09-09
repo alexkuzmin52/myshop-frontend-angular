@@ -1,12 +1,12 @@
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpClientModule, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {IProduct} from "../product-models/product-interface";
-import {ProductUrlEnum} from "../product-constants/product-url-enum";
-import {HeaderRequestEnum} from "../product-constants/header-request-enum";
-import {ICategory, ISubCategory, ISubSubCategory} from "../../category/category-models";
+
 import {CategoryUrlEnum} from "../../category/constants";
-import {IProductFilter} from "../product-models/product-filter-interface";
+import {HeaderRequestEnum} from "../product-constants";
+import {ICategory, ISubCategory, ISubSubCategory} from "../../category/category-models";
+import {IProduct} from "../product-models";
+import {ProductUrlEnum} from "../product-constants";
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +38,6 @@ export class ProductService {
     formData.append('csv_file', csvFile);
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
     return this.http.post<IProduct[]>(ProductUrlEnum.PRODUCT_CREATE_FROM_CSV, formData, {headers: myHeaders})
-
   }
 
   createProduct = (product: IProduct, token: string): Observable<IProduct> => {
@@ -52,26 +51,48 @@ export class ProductService {
     return this.http.get(ProductUrlEnum.PRODUCT_GET_CSV, {headers: myHeaders, responseType: 'blob'});
   }
 
-  getCategoriesOfProducts = (): Observable<[string]> => {
-    return this.http.get<[string]>(ProductUrlEnum.GET_CATEGORY_OF_PRODUCTS);
-  }
-
   getProductsByFilter = (filter: any): Observable<IProduct[]> => {
-    console.log(filter);
     let params = new HttpParams({fromObject: filter})
-    //   .set('category', filter.category as string);
-    // params = params.append('brand', filter.brand as string);
-
-
-    // .set('params', JSON.stringify(filter));
-    console.log(params);
-    // test = JSON.parse(params as string)
     return this.http.get<IProduct[]>(ProductUrlEnum.GET_PRODUCTS_BY_FILTER, {params: params});
   }
 
-  getPropertyOfProduct(property: string): Observable<[string]> {
-    const params = new HttpParams().set('property', property);
-    return this.http.get<[string]>(ProductUrlEnum.GET_PROPERTIES_OF_PRODUCTS, {params: params})
+  // getPropertyOfProduct(property: string): Observable<[string]> {
+  //   const params = new HttpParams().set('property', property);
+  //   return this.http.get<[string]>(ProductUrlEnum.GET_PROPERTIES_OF_PRODUCTS, {params: params})
+  //
+  // }
 
+  getProduct(id: number): Observable<IProduct> {
+    return this.http.get<IProduct>(ProductUrlEnum.PRODUCT + `/${id}`);
+  }
+
+  updateProduct(product: Partial<IProduct>, token: string, id: number): Observable<IProduct> {
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return this.http.put<IProduct>(ProductUrlEnum.PRODUCT + `/${id}`, product, {headers: myHeaders});
+  }
+
+  addPhotos(photos: FileList, id: number, token: string): Observable<any> {
+    const formData = new FormData();
+
+    for (let i = 0; i < photos.length; i++) {
+      formData.append('photos', photos[i]);
+    }
+
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return this.http.post(ProductUrlEnum.PRODUCT_ADD_PHOTOS + `/${id}`, formData, {headers: myHeaders});
+  }
+
+  getProductPhotos(id: number, photoName: string): Observable<Blob> {
+   return  this.http.get(ProductUrlEnum.PRODUCT_GET_PHOTOS + `/${id}/${photoName}`,{responseType: 'blob'});
+  }
+
+  deletePhoto(id: number, photoName: string, token:string): Observable<any> {
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return  this.http.delete(ProductUrlEnum.PRODUCT_GET_PHOTOS + `/${id}/${photoName}`,{headers: myHeaders});
+  }
+
+  deleteProduct(id: number, token:string): Observable<any> {
+    const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
+    return  this.http.delete(ProductUrlEnum.PRODUCT + `/${id}`,{headers: myHeaders});
   }
 }

@@ -16,6 +16,7 @@ import { CategoryComponent } from './category-components/category/category.compo
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDividerModule} from "@angular/material/divider";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {MatDividerModule} from "@angular/material/divider";
     MatCardModule,
     MatSidenavModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    MatGridListModule
   ]
 })
 export class CategoryModule { }

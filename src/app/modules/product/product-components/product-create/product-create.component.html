@@ -1,0 +1,369 @@
+<p>product-create works!</p>
+
+<!--  /======================================== TOOLBAR =======================================/-->
+<mat-toolbar color="primary">
+  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+    <mat-icon *ngIf="!sidenav.opened">
+      menu
+    </mat-icon>
+    <mat-icon *ngIf="sidenav.opened">
+      close
+    </mat-icon>
+  </button>
+  <span style="color: yellow">Create Product</span>
+  <button mat-button (click)="onHome()">Home</button>
+  <button mat-button (click)="onAllProduct()">All products</button>
+</mat-toolbar>
+<!--  /======================================== SIDE-NAV-CONTAINER ============================/-->
+<div class="container">
+</div>
+<mat-sidenav-container>
+  <!--  /************************************ sidenav *************************************/-->
+  <mat-sidenav mode="side" #sidenav="matSidenav" class="side-menu" opened>
+    <ng-container *ngTemplateOutlet="productCreateMenu"></ng-container>
+  </mat-sidenav>
+  <!--  /************************************ sidenav-content *****************************/-->
+  <mat-sidenav-content class="sidenav">
+    <div *ngIf="productAction === 'create product csv'">
+      <ng-container *ngTemplateOutlet="productCsvForm"></ng-container>
+    </div>
+    <div *ngIf="productAction === 'create product'">
+      <ng-container *ngTemplateOutlet="createProductForm"></ng-container>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+<ng-template #productCreateMenu>
+  <div>
+    <button mat-button class="menu-button" (click)="onCreateProductsFromForm()">Product form</button>
+    <mat-divider></mat-divider>
+    <button mat-button class="menu-button" (click)="onCreateProductsFromCSV()">CSV file</button>
+    <mat-divider></mat-divider>
+  </div>
+</ng-template>
+<!--  /========================================== TEMPLATES ===================================/-->
+<!--  ******************************** create product csv form *********************************-->
+<ng-template #productCsvForm>
+  <div>
+    <fieldset>
+      <form [formGroup]="createProductCSV">
+        <legend>Create categories from csv file</legend>
+        <mat-form-field appearens="fill">
+          <mat-label>Csv file</mat-label>
+          <input matInput placeholder="file" formControlName="file_name">
+        </mat-form-field>
+        <div>
+          <input type="file" multiple (change)="onChangeCsvFile($event)">
+        </div>
+        <br>
+        <div>
+          <button mat-raised-button color="primary" (click)="onSubmitCreateProductsFromCSV()">Submit</button>
+        </div>
+      </form>
+    </fieldset>
+  </div>
+</ng-template>
+<!--  ******************************** create product form ********************************-->
+<ng-template #createProductForm>
+  <div>
+    <fieldset>
+      <form [formGroup]="productForm">
+        <legend>Create product</legend>
+        <!--================================ title ==============================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Max 50, Min 3 characters">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" #title minLength="3" maxlength="50" required>
+            <mat-hint align="end">
+              {{title.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ accountingType =======================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>AccountingType</mat-label>
+            <mat-select [(value)]="selectedAccountingType" formControlName="accountingType">
+              <mat-option *ngFor="let account of accountingType" [value]="account.value">
+                {{account.value}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!--================================ brand =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Max 30, Min 2 characters">
+            <mat-label>Brand</mat-label>
+            <input matInput formControlName="brand" #brand maxlength="30" minlength="3" required>
+            <mat-hint align="end">
+              {{brand.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ level =======================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label> Choose category level</mat-label>
+            <mat-select [(value)]="selectedCategoryLevel" formControlName="level"
+                        (selectionChange)="onChangeCategoryLevel($event)">
+              <mat-option *ngFor="let item of categoryLevel" [value]="item.level">
+                {{item.level}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category">
+              <mat-option *ngFor="let cat of categoriesTitleList" [value]="cat">
+                {{cat}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!--================================ countryOfManufacture =======================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Country of Manufacture</mat-label>
+            <mat-select formControlName="countryOfManufacture">
+              <mat-option *ngFor="let country of countries" [value]="country.name">
+                {{country.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!--================================ originalPrice =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0.1, Max 99999">
+            <mat-label>originalPrice</mat-label>
+            <input matInput type="number" formControlName="originalPrice" #originalPrice min="0.1" max="99999"
+                   step="1"
+                   required>
+            <mat-hint align="end">
+              {{originalPrice.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ price =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0.1, Max 99999">
+            <mat-label>price</mat-label>
+            <input matInput type="number" formControlName="price" #price min="0.1" max="99999" step="1"
+                   required>
+            <mat-hint align="end">
+              {{price.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ discount =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 0.99">
+            <mat-label>Discount</mat-label>
+            <input matInput type="number" formControlName="discount" #discount min="0" max="0.99" step="0.1">
+            <mat-hint align="end">
+              {{discount.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ equipment =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>Equipment</mat-label>
+            <textarea matInput formControlName="equipment" #equipment minlength="0" maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{equipment.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ shortCharacteristics =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>shortCharacteristics</mat-label>
+            <textarea matInput formControlName="shortCharacteristics" #shortCharacteristics minlength="0"
+                      maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{shortCharacteristics.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ fullCharacteristics =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>fullCharacteristics</mat-label>
+            <textarea matInput formControlName="fullCharacteristics" #fullCharacteristics minlength="0"
+                      maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{fullCharacteristics.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ shortDescription =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>shortDescription</mat-label>
+            <textarea matInput formControlName="shortDescription" #shortDescription minlength="0"
+                      maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{shortDescription.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ fullDescription =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 9999 characters">
+            <mat-label>fullDescription</mat-label>
+            <textarea matInput formControlName="fullDescription" #fullDescription minlength="0"
+                      maxlength="9999"></textarea>
+            <mat-hint align="end">
+              {{fullDescription.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ newFlag =======================================-->
+        <div>
+          <mat-checkbox formControlName="newFlag" (change)="onChangeNewFlag($event)">newFlag</mat-checkbox>
+        </div>
+        <!--================================ promoFlag =======================================-->
+        <div>
+          <mat-checkbox formControlName="promoFlag" (change)="onChangePromoFlag($event)">promoFlag</mat-checkbox>
+        </div>
+        <!--================================ overview_url =======================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>overview_url</mat-label>
+            <input matInput formControlName="overview_url" #overview_url required>
+          </mat-form-field>
+        </div>
+        <!--================================ packageAmount =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 1">
+            <mat-label>packageAmount</mat-label>
+            <input matInput type="number" formControlName="packageAmount" #packageAmount min="1" step="1" required>
+            <mat-hint align="end">
+              {{packageAmount.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ packageDimensionsForm =======================================-->
+        <div formGroupName="packageDimensions">packageDimensions
+          <!--          <div>-->
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>length</mat-label>
+            <input matInput type="number" formControlName="length" #length min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{length.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>width</mat-label>
+            <input matInput type="number" formControlName="width" #width min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{width.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>height</mat-label>
+            <input matInput type="number" formControlName="height" #height min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{height.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>weight</mat-label>
+            <input matInput type="number" formControlName="weight" #weight min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{weight.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <!--          </div>-->
+
+
+        </div>
+        <!--================================ itemDimensionsForm =======================================-->
+        <div formGroupName="itemDimensions">itemDimensions
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>length</mat-label>
+            <input matInput type="number" formControlName="length" #length min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{length.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>width</mat-label>
+            <input matInput type="number" formControlName="width" #width min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{width.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>height</mat-label>
+            <input matInput type="number" formControlName="height" #height min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{height.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 12000">
+            <mat-label>weight</mat-label>
+            <input matInput type="number" formControlName="weight" #weight min="0" max="12000" step="1" required>
+            <mat-hint align="end">
+              {{weight.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+
+
+        </div>
+        <!--================================ stockCount =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 99999">
+            <mat-label>stockCount</mat-label>
+            <input matInput type="number" formControlName="stockCount" #stockCount min="0" max="99999" step="1"
+                   required>
+            <mat-hint align="end">
+              {{stockCount.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ storeCount =======================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 0, Max 99999">
+            <mat-label>storeCount</mat-label>
+            <input matInput type="number" formControlName="storeCount" #storeCount min="0" max="99999" step="1"
+                   required>
+            <mat-hint align="end">
+              {{storeCount.value || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ provider ==============================================-->
+        <div>
+          <mat-form-field appearance="fill" hintLabel="Min 3, Max 50 characters">
+            <mat-label>provider</mat-label>
+            <input matInput formControlName="provider" #provider minLength="3" maxlength="50" required>
+            <mat-hint align="end">
+              {{title.value?.length || 0}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <!--================================ photo ==============================================-->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Photo</mat-label>
+            <input matInput formControlName="photo">
+          </mat-form-field>
+        </div>
+
+
+        <div>
+          <button mat-raised-button color="primary" (click)="onSubmitCreateProduct(productForm)"
+                  [disabled]="productForm.status=='INVALID'">Submit
+          </button>
+          <button mat-raised-button color="primary" type="reset">Reset</button>
+        </div>
+      </form>
+    </fieldset>
+  </div>
+</ng-template>
+
+
+
+

@@ -17,12 +17,19 @@ import {MatCardModule} from "@angular/material/card";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDividerModule} from "@angular/material/divider";
+import {MatGridListModule} from "@angular/material/grid-list";
+import { ProductHomeComponent } from './product-components/product-home/product-home/product-home.component';
+import { ProductCreateComponent } from './product-components/product-create/product-create.component';
+import { ProductEditComponent } from './product-components/product-edit/product-edit.component';
 
 registerLocaleData(localRu, 'ru')
 
 @NgModule({
   declarations: [
-    ProductComponent
+    ProductComponent,
+    ProductHomeComponent,
+    ProductCreateComponent,
+    ProductEditComponent
   ],
   imports: [
     CommonModule,
@@ -41,7 +48,8 @@ registerLocaleData(localRu, 'ru')
     MatSidenavModule,
     MatIconModule,
     MatDividerModule,
-    MatCardModule
+    MatCardModule,
+    MatGridListModule
 
   ],
   providers: [

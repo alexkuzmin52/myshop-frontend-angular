@@ -7,14 +7,15 @@ import {MatSidenav} from "@angular/material/sidenav";
 import {delay} from "rxjs/operators";
 
 import {ICategory, ISubCategory, ISubSubCategory} from "../../../category/category-models";
-import {IProductFilter} from "../../product-models/product-filter-interface";
-import {IProduct} from "../../product-models/product-interface";
-import {ProductActionEnum} from "../../product-constants/product-action-enum";
-import {ProductMenuActionEnum} from "../../product-constants/product-menu-action-enum";
-import {ProductService} from "../../product-services/product.service";
+import {IProductFilter} from "../../product-models";
+import {IProduct} from "../../product-models";
+import {ProductActionEnum} from "../../product-constants";
+import {ProductMenuActionEnum} from "../../product-constants";
+import {ProductService} from "../../product-services";
 import {ProductTypeEnum} from "../../product-constants";
 import {RegexEnum} from "../../../category/constants";
 import {countriesList} from '../../countries-list';
+import {MatSelectChange} from "@angular/material/select";
 
 @Component({
   selector: 'app-product',
@@ -27,7 +28,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
   sidenav!: MatSidenav;
   products: IProduct[];
   productFilter: IProductFilter = {};
-  product: IProduct = {} as IProduct;
+  selectedProduct: IProduct = {} as IProduct;
   productAction: string = ProductActionEnum.PRODUCT_NOT_ACTION;
   productMenuAction: string = ProductMenuActionEnum.PRODUCT_MENU_NOT_ACTION;
   listProductCategory: Array<string> = [''];
@@ -110,11 +111,11 @@ export class ProductComponent implements OnInit, AfterViewInit {
       newFlag: [false],
       promoFlag: [false],
       overview_url: ['', [Validators.required, Validators.pattern(RegexEnum.url)]],
-      packageAmount: [1, [Validators.min(1), Validators.pattern('[0-9]')]],
+      packageAmount: [1, [Validators.min(1), Validators.max(10000)]],
       packageDimensions: this.packageDimensionsForm,
       itemDimensions: this.itemDimensionsForm,
-      stockCount: [1, [Validators.required, Validators.min(0), Validators.max(9999), Validators.pattern('[0-9]')]],
-      storeCount: [1, [Validators.required, Validators.min(0), Validators.max(9999), Validators.pattern('[0-9]')]],
+      stockCount: [1, [Validators.required, Validators.min(0), Validators.max(9999)]],
+      storeCount: [1, [Validators.required, Validators.min(0), Validators.max(9999)]],
       provider: ['', [Validators.minLength(3), Validators.maxLength(50)]],
       photo: [{value: [''], disabled: true}]
     })
@@ -155,7 +156,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.productFilterForm.valueChanges.subscribe(res => {
-     this.productFilter = Object.fromEntries(Object.entries(res).filter(([n,v])=>!!v));
+      this.productFilter = Object.fromEntries(Object.entries(res).filter(([n, v]) => !!v));
       console.log(this.productFilter); //TODO
     })
   }
@@ -288,8 +289,9 @@ export class ProductComponent implements OnInit, AfterViewInit {
     this.productService.getProductsByFilter(this.productFilter)
       .subscribe(res => {
         this.products = res;
-        this.listProductCategory = Array.from(new Set(this.products.map((value) => value.category).sort())) ;
-        this.listProductBrand = Array.from(new Set(this.products.map((value) => value.brand).sort())) ;
+        this.listProductCategory = Array.from(new Set(this.products.map((value) => value.category).sort()));
+        this.listProductBrand = Array.from(new Set(this.products.map((value) => value.brand).sort()));
+
       }, error => {
         console.log(error.error.message);
         alert(`error: ${error.error.message}`);
@@ -299,5 +301,117 @@ export class ProductComponent implements OnInit, AfterViewInit {
   onCancelFilters() {
     this.productFilter = {};
     this.onChangeProductFilterForm();
+  }
+
+  onAddPhotos() {
+    this.productAction = ProductActionEnum.ADD_PRODUCT_PHOTOS;
+  }
+
+  onItemEdit(item: IProduct) {
+    this.productMenuAction = ProductMenuActionEnum.EDIT_ITEM_PRODUCT_MENU;
+    this.productService.getProduct(item.id).subscribe(res => {
+        this.selectedProduct = res;
+        console.log(res);
+        // if (this.findProductInCategory(this.selectedProduct.category, this.subSubCategories)) {
+        //   this.productForm.controls['level'].setValue('subSubCategory');
+        //   this.categoriesTitleList.length = 0;
+        //   for (let category of this.subSubCategories) {
+        //     this.categoriesTitleList.push(category.title);
+        //   }
+        //   this.productForm.controls['category'].patchValue(this.selectedProduct.category);
+        //
+        //
+        // }
+
+        this.setValuesToProductForm();
+
+      },
+      error => {
+        console.log(error.error.message);
+        alert(`error: ${error.error.message}`);
+      });
+    // this.selectedProduct = item;
+    this.productForm.controls['countryOfManufacture'].disable();
+    this.productForm.controls['category'].disable();
+
+  }
+
+  setValuesToProductForm() {
+    this.productForm.controls['title'].setValue(this.selectedProduct.title);
+    this.productForm.controls['accountingType'].setValue(this.selectedProduct.accountingType);
+    this.productForm.controls['brand'].setValue(this.selectedProduct.brand);
+    // this.productForm.controls['level'].setValue('subSubCategory');
+    this.productForm.controls['category'].patchValue(this.selectedProduct.category);
+    this.productForm.controls['countryOfManufacture'].patchValue(this.selectedProduct.countryOfManufacture);
+    this.productForm.controls['discount'].setValue(this.selectedProduct.discount);
+    this.productForm.controls['originalPrice'].setValue(this.selectedProduct.originalPrice);
+    this.productForm.controls['equipment'].setValue(this.selectedProduct.equipment);
+    this.productForm.controls['fullCharacteristics'].setValue(this.selectedProduct.fullCharacteristics);
+    this.productForm.controls['fullDescription'].setValue(this.selectedProduct.fullDescription);
+    this.productForm.controls['newFlag'].setValue(this.selectedProduct.newFlag);
+    this.productForm.controls['overview_url'].setValue(this.selectedProduct.overview_url);
+    this.productForm.controls['packageAmount'].setValue(this.selectedProduct.packageAmount);
+    this.packageDimensionsForm.controls['length'].setValue(this.selectedProduct.packageDimensions?.length);
+    this.packageDimensionsForm.controls['width'].setValue(this.selectedProduct.packageDimensions?.width);
+    this.packageDimensionsForm.controls['height'].setValue(this.selectedProduct.packageDimensions?.height);
+    this.packageDimensionsForm.controls['weight'].setValue(this.selectedProduct.packageDimensions?.weight);
+    this.itemDimensionsForm.controls['length'].setValue(this.selectedProduct.itemDimensions?.length);
+    this.itemDimensionsForm.controls['width'].setValue(this.selectedProduct.itemDimensions?.width);
+    this.itemDimensionsForm.controls['height'].setValue(this.selectedProduct.itemDimensions?.height);
+    this.itemDimensionsForm.controls['weight'].setValue(this.selectedProduct.itemDimensions?.weight);
+    this.productForm.controls['photo'].setValue(this.selectedProduct.photo);
+    this.productForm.controls['price'].setValue(this.selectedProduct.price);
+    this.productForm.controls['promoFlag'].setValue(this.selectedProduct.promoFlag);
+    this.productForm.controls['provider'].setValue(this.selectedProduct.provider);
+    this.productForm.controls['shortCharacteristics'].setValue(this.selectedProduct.shortCharacteristics);
+    this.productForm.controls['shortDescription'].setValue(this.selectedProduct.shortDescription);
+    this.productForm.controls['stockCount'].setValue(this.selectedProduct.stockCount);
+    this.productForm.controls['storeCount'].setValue(this.selectedProduct.storeCount);
+    this.productForm.controls['title'].setValue(this.selectedProduct.title);
+
+
+  }
+
+  compareCountry(o1: any, o2: any): boolean {
+    console.log('compareCountry');
+    console.log((o1 && o2));
+    return o1 && o2 ? o1 === o2 : o1 === o2;
+    ;
+  }
+
+  compareCategory(o1: any, o2: any): boolean {
+    console.log('compareCategory');
+    console.log(o1, o2);
+    return o1.title == o2.title;
+  }
+
+  findProductInCategory(productCategory: string, category: ICategory[] | ISubCategory[] | ISubSubCategory[]): boolean {
+    // console.log('findProductInCategory================================================================');
+    console.log(productCategory);
+    // console.log(category);
+    // Object.entries(category).forEach(([k, v]) => {
+    //   console.log(v);
+    //  return  v.title == productCategory;
+    // })
+    const test = Object.entries(category).map((v, i) => v[1].title).filter(v => v == productCategory);
+    console.log('console.log(Object.entries(category));');
+    console.log(Object.entries(category));
+    console.log(test);
+    return test.length ? true : false;
+    // const isExist =  Object.fromEntries(Object.entries(category).filter((v,i) => v[1].title== productCategory));
+    // const isExist =  Object.fromEntries(Object.entries(category).filter(([k,v],i) => v.title== productCategory));
+    //
+    // console.log(isExist);
+  }
+
+  onChangeCountry(event: MatSelectChange) {
+    console.log(event.value);
+    this.productForm.controls['countryOfManufacture'].patchValue(event.value);
+  }
+
+  onChangeCategory(event: MatSelectChange) {
+    console.log(event.value);
+    this.productForm.controls['category'].patchValue(event.value);
+
   }
 }

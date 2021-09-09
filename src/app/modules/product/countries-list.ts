@@ -196,4 +196,16 @@ export const countriesList = [
   {name: 'Yemen'},
   {name: 'Zambia'},
   {name: 'Zimbabwe'},
+
+  {name: 'страна 1'},
+  {name: 'страна 2'},
+  {name: 'страна 3'},
+  {name: 'страна 4'},
+  {name: 'страна 5'},
+  {name: 'страна 6'},
+  {name: 'страна 7'},
+  {name: 'страна 8'},
+  {name: 'страна 9'},
+  {name: 'страна 10'},
+
 ]
