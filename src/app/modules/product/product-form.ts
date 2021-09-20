@@ -32,7 +32,7 @@ export class ProductForm {
       category: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
       // code: [0, [Validators.min(0)]],
       countryOfManufacture: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
-      discount: [0, [Validators.min(0), Validators.max(0.99)]],
+      discount: [0, [Validators.min(0), Validators.max(99)]],
       originalPrice: [0.1, [Validators.required, Validators.min(0.1), Validators.max(99999)]],
       price: [0.1, [Validators.required, Validators.min(0.1), Validators.max(99999)]],
       equipment: ['', [Validators.minLength(0), Validators.maxLength(9999)]],

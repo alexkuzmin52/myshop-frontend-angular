@@ -54,4 +54,5 @@ export interface IProduct {
   title: string;
   updatedAt: string;
   userID: string;
+  photoSRC: any[];
 }

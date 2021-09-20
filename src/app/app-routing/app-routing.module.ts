@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from "@angular/router";
+import {PreloadAllModules, RouterModule, Routes} from "@angular/router";
 import {AppComponent} from "../app-components/app/app.component";
 import {HomeComponent} from "../app-components/home/home.component";
 import {NotFoundComponent} from "../app-components/not-found/not-found.component";
@@ -17,7 +17,7 @@ const routes: Routes = [
   declarations: [],
   imports: [
     CommonModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules})
   ],
   exports: [
     RouterModule

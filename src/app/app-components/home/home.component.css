@@ -9,3 +9,12 @@
 mat-toolbar {
   height: 40px;
 }
+.same {
+  overflow: hidden;
+  width: 100%;
+  height: 300px;
+}
+/*mat-card-header{*/
+/*  width: 100%;*/
+/*  height: 30px;*/
+/*}*/

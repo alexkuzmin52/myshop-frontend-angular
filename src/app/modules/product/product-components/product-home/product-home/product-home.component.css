@@ -1,52 +1,108 @@
 .container {
   font-size: 14px;
 }
+
 .sidenav {
-  background-color: #41e2c6;
+  /*background-color: #41e2c6;*/
 }
+
 .side-menu {
   width: 250px;
 }
+
 mat-sidenav-container {
-  height:  calc(100vh - 40px);
+  height: calc(100vh - 40px);
 }
+
 mat-sidenav {
-  /*margin-top: 20px;*/
-  /*margin: 16px;*/
-  /*width: 200px;*/
   border-right: none;
-  /*background: #3952b5;*/
   color: #0a06aa;
-  /*border-radius: 10px;*/
-  /*padding: 16px;*/
-  /*text-align: center;*/
-  /*font-max-size: 10px;*/
 }
+
 mat-toolbar {
   height: 40px;
 }
+
 .menu-button {
   display: block;
 }
+
 .item-card-grid {
-  max-width: 250px;
+  width: 100%;
   background-color: #eed8bc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   height: 100%;
+  padding: 0;
+}
+
+.menu-select {
+}
+
+.grid-tile {
+  /*overflow-x: hidden;*/
+  overflow-y: visible;
   width: 100%;
 }
-.menu-select {
-  /*background-color: #c23434;*/
-  /*color: white;*/
-}
-mat-grid-tile {
-  background: lightblue;
-}
+
 .item-card {
-  /*width: 250px;*/
   background-color: #fffaa6;
+  width: 100%;
 }
+
 .product-form {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.card_header {
+  width: 100%;
+  min-height: 40px;
+  display: flex;
+  flex-direction: row;
+  /*padding-top: 0;*/
+  /*position: absolute;*/
+  /*top: 0;*/
+  /*left: 0;*/
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #41e2c6;
+  width: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /*padding-top: 16px;*/
+}
+.card-div {
+  padding-top: 16px;
+}
+/*.card_header {*/
+/*  !*position: absolute;*!*/
+/*  !*left: 0;*!*/
+/*  !*top: 0;*!*/
+/*  height: 40px;*/
+/*  display: flex;*/
+/*}*/
+
+.grid-tile {
+  /*display: flex;*/
+  /*flex-direction: column;*/
+}
+
+.shot-characteristics {
+  width: 100%;
+  background-color: black;
+  color: white;
+  position: absolute;
+  top: 450px;
+  display: none;
+/*z-index: 100;*/
+  /*left: 0;*/
+  /*bottom: -100px;*/
 }

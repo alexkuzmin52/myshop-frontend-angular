@@ -70,11 +70,13 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe(param => {
-      this.productService.getProduct(+param.id).pipe(takeUntil(this.destroy$)).subscribe(res => {
-        this.selectedProduct = res;
-        this.setValuesToProductEditForm();
-        this.getSelectedProductPhotos();
-      })
+      this.productService.getProduct(+param.id)
+        // .pipe(takeUntil(this.destroy$))
+        .subscribe(res => {
+          this.selectedProduct = res;
+          this.setValuesToProductEditForm();
+          this.getSelectedProductPhotos();
+        })
     })
   }
 
@@ -94,8 +96,10 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log(this.destroy$);
     this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+    console.log(this.destroy$);
+    this.destroy$.complete();
   }
 
   onHome() {
@@ -190,13 +194,14 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
   onSaveEdit(productEditForm: FormGroup) {
     delete productEditForm.value.level;
     this.productService.updateProduct(productEditForm.value, this.token, this.selectedProduct.id)
-      .pipe(takeUntil(this.destroy$)).subscribe(res => {
-        console.log(res);
-      },
-      error => {
-        console.log(error.error.message);
-        alert(`error: ${error.error.message}`);
-      })
+      // .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+          // console.log(res);
+        },
+        error => {
+          console.log(error.error.message);
+          alert(`error: ${error.error.message}`);
+        })
   }
 
   onAddPhoto() {
@@ -216,13 +221,14 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSavePhoto() {
     this.productService.addPhotos(this.photos, this.selectedProduct.id, this.token)
-      .pipe(takeUntil(this.destroy$)).subscribe(res => {
-        console.log(res);
-      },
-      error => {
-        console.log(error.error.message);
-        alert(`error: ${error.error.message}`);
-      });
+      // .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+          // console.log(res);
+        },
+        error => {
+          console.log(error.error.message);
+          alert(`error: ${error.error.message}`);
+        });
     this.photos = null;
     this.sourcePhotoFiles = [];
     this.addPhotoFlag = false;
@@ -235,6 +241,9 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getSelectedProductPhotos() {
     for (let i = 0; i < this.selectedProduct.photo.length; i++) {
+      // console.log('*******************************************************');
+      // console.log(this.selectedProduct.photo.length);
+      // console.log(this.selectedProduct.photo[i]);
       this.productService.getProductPhotos(this.selectedProduct.id, this.selectedProduct.photo[i])
         .pipe(takeUntil(this.destroy$)).subscribe(res => {
           this.src = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(res));
@@ -260,5 +269,18 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log(error.error.message);
         alert(`error: ${error.error.message}`);
       })
+  }
+
+  onChangeDiscount(event: any) {
+    const discount = +event.target.value/100;
+    // console.log( typeof (event.target.value));
+    // console.log( typeof (discount));
+    const price = this.productEditForm.get('originalPrice')?.value;
+    console.log(typeof (price));
+    const newPrice = Number(price * (1 - discount)).toFixed(2);
+    this.productEditForm.controls['price'].patchValue(newPrice);
+    if (discount>0) {
+      this.productEditForm.controls['promoFlag'].patchValue(true);
+    }
   }
 }

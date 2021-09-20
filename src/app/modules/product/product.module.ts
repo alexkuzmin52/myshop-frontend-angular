@@ -21,6 +21,9 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import { ProductHomeComponent } from './product-components/product-home/product-home/product-home.component';
 import { ProductCreateComponent } from './product-components/product-create/product-create.component';
 import { ProductEditComponent } from './product-components/product-edit/product-edit.component';
+import { ProductFilterChipsComponent } from './product-components/product-filter-chips/product-filter-chips.component';
+import {MatChipsModule} from "@angular/material/chips";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 registerLocaleData(localRu, 'ru')
 
@@ -29,7 +32,8 @@ registerLocaleData(localRu, 'ru')
     ProductComponent,
     ProductHomeComponent,
     ProductCreateComponent,
-    ProductEditComponent
+    ProductEditComponent,
+    ProductFilterChipsComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +53,9 @@ registerLocaleData(localRu, 'ru')
     MatIconModule,
     MatDividerModule,
     MatCardModule,
-    MatGridListModule
+    MatGridListModule,
+    MatChipsModule,
+    MatAutocompleteModule
 
   ],
   providers: [

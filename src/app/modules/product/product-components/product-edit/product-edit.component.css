@@ -1,15 +1,20 @@
 .container {
   font-size: 14px;
 }
+
 .sidenav {
+  /*width: calc(100% - 400px);*/
   /*background-color: #41e2c6;*/
 }
+
 .side-menu {
   width: 250px;
 }
+
 mat-sidenav-container {
-  height:  calc(100vh - 40px);
+  height: calc(100vh - 40px);
 }
+
 mat-sidenav {
   /*margin-top: 20px;*/
   /*margin: 16px;*/
@@ -22,29 +27,36 @@ mat-sidenav {
   /*text-align: center;*/
   /*font-max-size: 10px;*/
 }
+
 mat-toolbar {
   height: 40px;
 }
+
 .menu-button {
   display: block;
 }
+
 .item-card-grid {
   max-width: 250px;
   background-color: #eed8bc;
   height: 100%;
   width: 100%;
 }
+
 .menu-select {
   /*background-color: #c23434;*/
   /*color: white;*/
 }
+
 mat-grid-tile {
   background: lightblue;
 }
+
 .item-card {
   /*width: 250px;*/
   background-color: #fffaa6;
 }
+
 .product-form {
   display: flex;
   flex-direction: row;
