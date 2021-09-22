@@ -2,3 +2,12 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-tooltip.tooltip {
+  color: blue;
+  font-size: 14px;
+  background-color: white;
+  white-space: pre-wrap;
+  min-width: 250px;
+
+}

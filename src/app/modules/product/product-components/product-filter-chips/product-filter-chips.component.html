@@ -1,6 +1,3 @@
-<p>product-filter-chips works!</p>
-<p>{{filters[0]}}</p>
-<p>{{filters[1]}}</p>
 <mat-form-field class="example-chip-list" appearance="fill">
   <mat-label>Filters products</mat-label>
   <mat-chip-list #chipList aria-label="Filter selection">
@@ -13,19 +10,6 @@
       {{filter[1]}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
-<!--    <input-->
-<!--      placeholder="New filter..."-->
-<!--      #fruitInput-->
-<!--      [formControl]="fruitCtrl"-->
-<!--      [matAutocomplete]="auto"-->
-<!--      [matChipInputFor]="chipList"-->
-<!--      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"-->
-<!--      (matChipInputTokenEnd)="add($event)">-->
   </mat-chip-list>
-<!--  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">-->
-<!--    <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">-->
-<!--      {{fruit}}-->
-<!--    </mat-option>-->
-<!--  </mat-autocomplete>-->
 </mat-form-field>
 

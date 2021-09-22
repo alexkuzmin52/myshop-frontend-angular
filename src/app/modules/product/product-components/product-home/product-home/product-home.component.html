@@ -1,4 +1,3 @@
-<p>home product work</p>
 <!--  /======================================== TOOLBAR =======================================/-->
 <mat-toolbar color="primary">
   <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
@@ -13,10 +12,8 @@
   <button mat-button (click)="onHome()">Home</button>
   <button mat-button (click)="onProductCreate()">Create</button>
   <button mat-raised-button color="primary" (click)="onGetAllPhotos()">Photo</button>
-
-  <!--  <button mat-button (click)="onProductEdit()">Edit</button>-->
-
 </mat-toolbar>
+
 <app-product-filter-chips [filters]='productFilterArray'
                           (removeElemFilters)="onRemoveElemFilters($event)">app-product-filter-chips
 </app-product-filter-chips>
@@ -31,60 +28,13 @@
   </mat-sidenav>
   <!--  /************************************ sidenav-content *****************************/-->
   <mat-sidenav-content class="sidenav">
-    <!--  ******************************** products by filter *********************************-->
-    <mat-grid-list cols="5" rowHeight="450px" style="width: 80%" gutterSize="2px">
-      <div *ngFor="let item of products">
-        <mat-grid-tile class="grid-tile">
-          <div>
-            <mat-card class="card">
-              <div class="card_header">
-                <div *ngIf="item.newFlag">
-                  <img mat-card-avatar src="assets/images/New%20product30_30.png" style="width: 30px;height: 30px">
-                </div>
-                <div *ngIf="item.promoFlag">
-                  <img mat-card-avatar src="assets/images/promo.jpeg" style="width: 30px;height: 30px">
-                </div>
-              </div>
-              <!--              <div>-->
-              <mat-card-content style="width: 100%">
-                <div style="width: 100%; height: 200px">
-                  <img [src]=item.photoSRC[0] alt="photo" style="width: 100%; height: 100%; object-fit: cover">
-                </div>
-                <div class="card-div">
-                  <p>{{item.title}}</p>
-                </div>
-                <div style="height: 70px;">
-                  <div *ngIf="item.promoFlag" class="card-div">
-                      <span style="color: red;font-weight: bold;text-decoration: line-through">
-                       {{item.originalPrice | currency:'UAH':"symbol-narrow":"1.2-2"}}
-                      </span>
-                    discount
-                    <span style="font-weight: bolder; font-size: larger; color: red">
-                        {{item.discount}} %
-                      </span>
-                  </div>
-                  <div class="card-div">
-                    {{item.price | currency:'UAH':"symbol-narrow":"1.2-2"}}
-                  </div>
-                </div>
-                <mat-card-actions style="padding-bottom: 20px; align-self: center">
-                  <button mat-raised-button color="primary" (click)="onItemEdit(item)">Edit</button>
-                  <button mat-raised-button color="primary" (click)="onItemDelete(item.id)">Delete</button>
-                </mat-card-actions>
-              </mat-card-content>
-            </mat-card>
-          </div>
-          <div class="shot-characteristics">{{item.shortCharacteristics}}
-            <p>test</p>
-            <p>test</p>
-            <p>test</p>
-            <p>test</p>
-            <p>test</p>
-          </div>
+    <div fxHide.lt-md>
+      <span class="column-label">Columns</span>
+      <mat-slider [max]="6" [min]="3" [(ngModel)]="gridColumns" [thumbLabel]="true">
+      </mat-slider>
+    </div>
+    <ng-container *ngTemplateOutlet="productCard"></ng-container>
 
-        </mat-grid-tile>
-      </div>
-    </mat-grid-list>
   </mat-sidenav-content>
 </mat-sidenav-container>
 <!--  /========================================== TEMPLATES ===================================/-->
@@ -137,6 +87,55 @@
       <button mat-button class="menu-button" type="reset" (click)="onCancelFilters()">Cancel filters</button>
     </form>
     <mat-divider></mat-divider>
+  </div>
+</ng-template>
+<!--  /****************************************** flex layout *********************************/-->
+<ng-template #productCard>
+  <div class="contentProductCard" style="width: 80%">
+    <div fxLayout="row wrap" fxLayoutGap="16px grid">
+      <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%"
+           *ngFor="let item of products" class="mat-elevation-z4"
+           matTooltip="{{item.shortCharacteristics}}"
+           matTooltipClass="tooltip">
+        <mat-card>
+          <div class="card_header">
+            <div *ngIf="item.newFlag">
+              <img mat-card-avatar src="assets/images/New%20product30_30.png" style="width: 30px;height: 30px">
+            </div>
+            <div *ngIf="item.promoFlag">
+              <img mat-card-avatar src="assets/images/promo.jpeg" style="width: 30px;height: 30px">
+            </div>
+          </div>
+          <div style="width: 100%; height: 200px">
+            <img [src]=item.photoSRC[0] alt="photo" style="width: 100%; height: 100%; object-fit: cover">
+          </div>
+          <mat-card-content style="width: 100%">
+            <div>
+              <p>{{item.title}}</p>
+            </div>
+            <div style="height: 70px;">
+              <div *ngIf="item.promoFlag" class="card-div">
+                      <span style="color: red;font-weight: bold;text-decoration: line-through">
+                       {{item.originalPrice | currency:'UAH':"symbol-narrow":"1.2-2"}}
+                      </span>
+                discount
+                <span style="font-weight: bolder; font-size: larger; color: red">
+                        {{item.discount}} %
+                      </span>
+              </div>
+              <div class="card-div">
+                {{item.price | currency:'UAH':"symbol-narrow":"1.2-2"}}
+              </div>
+            </div>
+
+            <mat-card-actions style="padding-bottom: 20px; align-self: center">
+              <button mat-raised-button color="primary" (click)="onItemEdit(item)">Edit</button>
+              <button mat-raised-button color="primary" (click)="onItemDelete(item.id)">Delete</button>
+            </mat-card-actions>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
   </div>
 </ng-template>
 

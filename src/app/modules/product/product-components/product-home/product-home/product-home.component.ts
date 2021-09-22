@@ -17,13 +17,15 @@ import {minMaxProductPriceHelper} from "../../../product-helpers";
 @Component({
   selector: 'app-product-home',
   templateUrl: './product-home.component.html',
-  styleUrls: ['./product-home.component.css']
+  styleUrls: ['./product-home.component.scss']
 })
 export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
 
   products: IProduct[];
+
+  gridColumns = 4;
 
   categories: ICategory[] = [];
   subCategories: ISubCategory[] = [];
@@ -43,6 +45,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   filterAction: Boolean = false;
 
+  shotCharacteristicDisplay: string = 'none';
 
   token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjgzMTY1NDUsImV4cCI6MTYzNjk1NjU0NX0.0B0nGk9yZZc2zO0Butx8J6ugMFkc_ddhi1Hwe-UobjE';
 
@@ -206,5 +209,13 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
       default:
         break;
     }
+  }
+
+  onMouseOverProductCard(event: MouseEvent) {
+    console.log(event.target);
+  }
+
+  onMouseLeaveProductCard(event: MouseEvent) {
+    console.log(event.target);
   }
 }

@@ -1,10 +1,10 @@
-import { LOCALE_ID,NgModule} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {LOCALE_ID, NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import localRu from '@angular/common/locales/ru-UA'
 import {registerLocaleData} from "@angular/common";
 
-import { ProductRoutingModule } from './product-routing.module';
-import { ProductComponent } from './product-components/product/product.component';
+import {ProductRoutingModule} from './product-routing.module';
+import {ProductComponent} from './product-components/product/product.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
 import {MatMenuModule} from "@angular/material/menu";
@@ -18,12 +18,16 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatGridListModule} from "@angular/material/grid-list";
-import { ProductHomeComponent } from './product-components/product-home/product-home/product-home.component';
-import { ProductCreateComponent } from './product-components/product-create/product-create.component';
-import { ProductEditComponent } from './product-components/product-edit/product-edit.component';
-import { ProductFilterChipsComponent } from './product-components/product-filter-chips/product-filter-chips.component';
+import {ProductHomeComponent} from './product-components/product-home/product-home/product-home.component';
+import {ProductCreateComponent} from './product-components/product-create/product-create.component';
+import {ProductEditComponent} from './product-components/product-edit/product-edit.component';
+import {ProductFilterChipsComponent} from './product-components/product-filter-chips/product-filter-chips.component';
 import {MatChipsModule} from "@angular/material/chips";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+// import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatSliderModule} from "@angular/material/slider";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 registerLocaleData(localRu, 'ru')
 
@@ -40,26 +44,30 @@ registerLocaleData(localRu, 'ru')
     ProductRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    // BrowserAnimationsModule,
 
-    MatToolbarModule,
+    MatAutocompleteModule,
     MatButtonModule,
-    MatMenuModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatSelectModule,
+    MatCardModule,
+    MatCardModule,
     MatCheckboxModule,
-    MatCardModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatDividerModule,
-    MatCardModule,
-    MatGridListModule,
     MatChipsModule,
-    MatAutocompleteModule
-
+    MatDividerModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    FlexLayoutModule,
+    MatSliderModule,
+    MatTooltipModule
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'ru'}
   ]
 })
-export class ProductModule { }
+export class ProductModule {
+}
