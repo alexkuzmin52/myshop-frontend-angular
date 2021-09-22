@@ -1,13 +1,13 @@
-<mat-form-field class="example-chip-list" appearance="fill">
+<mat-form-field class="filter-product-chip-list" appearance="fill">
   <mat-label>Filters products</mat-label>
   <mat-chip-list #chipList aria-label="Filter selection">
-    <mat-chip>Clear</mat-chip>
+    <mat-chip (click)="onClearAllFilters()">Clear</mat-chip>
     <mat-chip
       *ngFor="let filter of filters"
       [selectable]="selectable"
       [removable]="removable"
       (removed)="remove(filter)">
-      {{filter[1]}}
+      {{filter[0]}} : {{filter[1]}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
   </mat-chip-list>

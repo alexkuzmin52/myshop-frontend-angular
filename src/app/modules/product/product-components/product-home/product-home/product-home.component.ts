@@ -19,33 +19,30 @@ import {minMaxProductPriceHelper} from "../../../product-helpers";
   templateUrl: './product-home.component.html',
   styleUrls: ['./product-home.component.scss']
 })
+
 export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
 
   products: IProduct[];
-
-  gridColumns = 4;
-
   categories: ICategory[] = [];
   subCategories: ISubCategory[] = [];
   subSubCategories: ISubSubCategory[] = [];
-
-  productFilterForm: FormGroup;
 
   listProductCategory: Array<string> = [''];
   listProductBrand: Array<string> = [''];
 
   productFilter: IProductFilterQuery = {};
   productFilterArray: Array<any> = [];
+  productFilterForm: FormGroup;
+  filterActionPriceGte: Boolean = false;
+  filterActionPriceLte: Boolean = false;
 
+  gridColumns = 4;
   minMaxPrice: { min: number, max: number };
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  filterAction: Boolean = false;
-
-  shotCharacteristicDisplay: string = 'none';
 
   token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjgzMTY1NDUsImV4cCI6MTYzNjk1NjU0NX0.0B0nGk9yZZc2zO0Butx8J6ugMFkc_ddhi1Hwe-UobjE';
 
@@ -59,11 +56,13 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subCategories = activatedRoute.snapshot.data.data[1];
     this.subSubCategories = activatedRoute.snapshot.data.data[2];
     this.products = activatedRoute.snapshot.data.data[3];
+
     this.minMaxPrice = minMaxProductPriceHelper(this.products);
+
     this.listProductCategory = Array.from(new Set(this.products.map((value) => value.category).sort()));
     this.listProductBrand = Array.from(new Set(this.products.map((value) => value.brand).sort()));
-    this.onGetAllPhotos();
 
+    this.onGetAllPhotos();
     /***************************************************** productFilter  Form */
     this.productFilterForm = fb.group({
       brand: ['', [Validators.minLength(2), Validators.maxLength(30)]],
@@ -79,11 +78,6 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productFilterForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(res => {
       this.productFilter = Object.fromEntries(Object.entries(res).filter(([k, v]) => !!v));
     });
-
-    if (!this.filterAction) {
-      this.productFilterForm.controls['priceGte'].patchValue(this.minMaxPrice.min);
-      this.productFilterForm.controls['priceLte'].patchValue(this.minMaxPrice.max);
-    }
 
     this.productFilterArray = Object.entries(this.productFilter);
   }
@@ -109,32 +103,39 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  onHome() {
+    this.router.navigate(['']);
+  }
+
   onItemEdit(item: IProduct) {
     this.router.navigate(['/product/edit'], {queryParams: {id: item.id}});
   }
 
-  onChangeProductFilterForm() {
-    if (!this.filterAction) {
-      this.productFilterForm.controls['priceGte'].patchValue(this.minMaxPrice.min);
-      this.productFilterForm.controls['priceLte'].patchValue(this.minMaxPrice.max);
-    }
-    this.productFilterArray = Object.entries(this.productFilter);
+  onProductCreate() {
+    this.router.navigate(['/product/create']);
+  }
 
+  onChangeProductFilterForm() {
+
+    if (!this.filterActionPriceLte) {
+      delete this.productFilter.priceLte;
+    }
+    if (!this.filterActionPriceGte) {
+      delete this.productFilter.priceGte;
+    }
+
+    this.productFilterArray = Object.entries(this.productFilter);
     this.productService.getProductsByFilter(this.productFilter)
       .subscribe(res => {
         this.products = res;
         this.listProductCategory = Array.from(new Set(this.products.map((value) => value.category).sort()));
         this.listProductBrand = Array.from(new Set(this.products.map((value) => value.brand).sort()));
-        const ptr = minMaxProductPriceHelper(this.products);
-        this.productFilterForm.controls['priceGte'].patchValue(ptr.min);
-        this.productFilterForm.controls['priceLte'].patchValue(ptr.max);
-
         this.onGetAllPhotos();
       });
   }
 
   onCancelFilters() {
-    this.productFilter = {};
+    this.productFilterForm.reset();
     this.onChangeProductFilterForm();
   }
 
@@ -156,18 +157,13 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onChangeProductFilterForm();
   }
 
-  onHome() {
-    this.router.navigate(['']);
-  }
-
-  onProductCreate() {
-    this.router.navigate(['/product/create']);
-  }
-
   onItemDelete(id: number) {
     this.productService.deleteProduct(id, this.token).subscribe(res => {
       console.log(res);
-    })
+    },
+      error => {
+        console.log(error.error.message);
+      })
   }
 
   uploadProductPhotos(product: IProduct) {
@@ -192,7 +188,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onChangeProductFilterFormPriceGte() {
-    this.filterAction = true;
+    this.filterActionPriceGte = true;
     this.onChangeProductFilterForm();
   }
 
@@ -206,16 +202,34 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.productFilterForm.controls['brand'].patchValue('');
         this.onChangeProductFilterForm();
         break;
+      case 'priceGte':
+        this.filterActionPriceGte = false;
+        this.productFilterForm.controls['priceGte'].patchValue(this.minMaxPrice.min);
+        this.onChangeProductFilterForm();
+        break;
+      case 'priceLte':
+        this.filterActionPriceLte = false;
+        this.productFilterForm.controls['priceLte'].patchValue(this.minMaxPrice.max);
+        this.onChangeProductFilterForm();
+        break;
+      case 'newFlag':
+        this.filterActionPriceLte = false;
+        this.productFilterForm.controls['newFlag'].patchValue(false);
+        this.onChangeProductFilterForm();
+        break;
+      case 'promoFlag':
+        this.filterActionPriceLte = false;
+        this.productFilterForm.controls['promoFlag'].patchValue(false);
+        this.onChangeProductFilterForm();
+        break;
       default:
         break;
     }
   }
 
-  onMouseOverProductCard(event: MouseEvent) {
-    console.log(event.target);
-  }
+  onChangeProductFilterFormPriceLte() {
+    this.filterActionPriceLte = true;
+    this.onChangeProductFilterForm();
 
-  onMouseLeaveProductCard(event: MouseEvent) {
-    console.log(event.target);
   }
 }

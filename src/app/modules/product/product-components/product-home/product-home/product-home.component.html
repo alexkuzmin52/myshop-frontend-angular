@@ -15,7 +15,9 @@
 </mat-toolbar>
 
 <app-product-filter-chips [filters]='productFilterArray'
-                          (removeElemFilters)="onRemoveElemFilters($event)">app-product-filter-chips
+                          (removeElemFilters)="onRemoveElemFilters($event)"
+                          (clearFilters) = "onCancelFilters()"
+>app-product-filter-chips
 </app-product-filter-chips>
 
 <!--  /======================================== SIDE-NAV-CONTAINER ============================/-->
@@ -73,7 +75,7 @@
       <mat-form-field appearance="fill" style="font-size: 14px"
                       hintLabel="Min {{minMaxPrice.min}}, Max {{minMaxPrice.max}}">
         <mat-label>From maximum price</mat-label>
-        <input matInput formControlName="priceLte" (blur)="onChangeProductFilterForm()" #priceLte>
+        <input matInput formControlName="priceLte" (blur)="onChangeProductFilterFormPriceLte()" #priceLte>
         <mat-hint align="end">
           {{ priceLte.value || 0}}
         </mat-hint>
