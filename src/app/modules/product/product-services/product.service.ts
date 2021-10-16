@@ -32,7 +32,6 @@ export class ProductService {
     return this.http.get<ISubSubCategory[]>(CategoryUrlEnum.SUB_SUB_CATEGORY)
   }
 
-
   createProductsFromCSV = (csvFile: File, token: string): Observable<IProduct[]> => {
     const formData = new FormData();
     formData.append('csv_file', csvFile);
@@ -43,7 +42,6 @@ export class ProductService {
   createProduct = (product: IProduct, token: string): Observable<IProduct> => {
     const myHeaders = new HttpHeaders().set(HeaderRequestEnum.AUTHORIZATION, token);
     return this.http.post<IProduct>(ProductUrlEnum.PRODUCT, product, {headers: myHeaders});
-
   }
 
   getProductCsvFile = (token: string): Observable<Blob> => {
@@ -55,12 +53,6 @@ export class ProductService {
     let params = new HttpParams({fromObject: filter})
     return this.http.get<IProduct[]>(ProductUrlEnum.GET_PRODUCTS_BY_FILTER, {params: params});
   }
-
-  // getPropertyOfProduct(property: string): Observable<[string]> {
-  //   const params = new HttpParams().set('property', property);
-  //   return this.http.get<[string]>(ProductUrlEnum.GET_PROPERTIES_OF_PRODUCTS, {params: params})
-  //
-  // }
 
   getProduct(id: number): Observable<IProduct> {
     return this.http.get<IProduct>(ProductUrlEnum.PRODUCT + `/${id}`);
