@@ -1,0 +1,121 @@
+<mat-toolbar color="primary" class="menu-toolbar">
+  <button mat-button *ngIf="sidenav.mode==='over'" (click)="sidenav.toggle()">
+    <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
+    <mat-icon *ngIf="sidenav.opened">close</mat-icon>
+  </button>
+  <span style="color: yellow">Users</span>
+  <div *ngIf="sidenav.mode ==='side'">
+    <button mat-button style="color: yellow">
+      <mat-icon>home</mat-icon>
+      <a routerLink="" class="link-toolbar"> admin </a>
+    </button>
+  </div>
+</mat-toolbar>
+<div>
+  <app-user-filter-chips
+    [filters]="userFilterArray"
+    (removeElemFilters)="onRemoveElemFilters($event)"
+    (clearFilters)="onClearFilters()">
+  </app-user-filter-chips>
+
+</div>
+
+<mat-sidenav-container>
+  <!--  /************************************ sidenav-menu *****************************/-->
+  <mat-sidenav #sidenav="matSidenav" mode="side" opened class="side-menu">
+    <div *ngIf="sidenav.mode==='over'">
+      <button mat-button [matMenuTriggerFor]="sideMenu">
+        TOP MENU
+        <mat-menu #sideMenu>
+          <button mat-menu-item>
+            <a routerLink="" class="link-toolbar">
+              <mat-icon>home</mat-icon>
+            </a>
+          </button>
+        </mat-menu>
+      </button>
+    </div>
+    <ng-container *ngTemplateOutlet="userFilterMenu"></ng-container>
+    <div fxHide.lt-md>
+      <span class="column-label">Columns</span>
+      <mat-slider [max]="6" [min]="3" [(ngModel)]="gridColumns" [thumbLabel]="true">
+      </mat-slider>
+    </div>
+  </mat-sidenav>
+  <!--  /************************************ sidenav-content **************************/-->
+  <mat-sidenav-content class="sidenav">
+    <ng-container *ngTemplateOutlet="userCard"></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<!--  /========================================== TEMPLATES =============================/-->
+<!--  /****************************************** USER CARD *****************************/-->
+<ng-template #userCard>
+  <div class="contentUserCard">
+    <div fxLayout="row wrap" fxLayoutGap="5px grid">
+      <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%"
+           *ngFor="let item of users" class="mat-elevation-z4"
+           matTooltip="updated {{item.createdAt | date}}"
+           matTooltipClass="tooltip">
+        <mat-card style="min-width: 200px">
+          <mat-card-header>
+            <img mat-card-avatar [src]=item.photoSRC alt="User photo" width="200px">
+            <mat-card-title>{{item.name}} {{item.surname}}</mat-card-title>
+            <mat-card-subtitle>{{item.role}}</mat-card-subtitle>
+          </mat-card-header>
+          <div style="width: 100%; height: 200px">
+            <img mat-card-image
+                 [src]=item.photoSRC alt="User photo" style="height: 100%; object-fit: cover">
+          </div>
+          <mat-card-content style="width: 100%">
+            <div>
+              <p> age: {{item.age}}</p>
+              <p>phone: {{item.phone}}</p>
+              <p>status: {{item.status}}</p>
+              <p>since: {{item.createdAt | date}}</p>
+            </div>
+            <mat-card-actions style="padding-bottom: 20px; align-self: center">
+              <button mat-button color="gray" (click)="onItemEdit(item)">Edit</button>
+            </mat-card-actions>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!--  /****************************************** FILTER MENU ***************************/-->
+<ng-template #userFilterMenu>
+  <form [formGroup]="userFilterForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role" (selectionChange)="onChangeUserFilter()">
+        <mat-option *ngFor="let item of listRoles" [value]="item">
+          {{item}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status" (selectionChange)="onChangeUserFilter()">
+        <mat-option *ngFor="let item of listStatuses" [value]="item">
+          {{item}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" hintLabel="Min: {{ageMin}} Max: {{ageLte.value}}">
+      <mat-label> Age from ...</mat-label>
+      <input matInput type="number" formControlName="ageGte" #ageGte min="{{ageMin}}" max="{{ageLte.value}}"
+             (blur)="onChangeAgeGte()">
+      <mat-hint align="end">
+        {{ageGte.value || 0}}
+      </mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="fill" hintLabel="Min: {{ageGte.value}} Max: {{ageMax}}">
+      <mat-label> Age to ...</mat-label>
+      <input matInput type="number" formControlName="ageLte" #ageLte min="{{ageGte.value}}" max="{{ageMax}}" step="1"
+             (blur)="onChangeAgeLte()">
+      <mat-hint align="end">
+        {{ageLte.value || 0}}
+      </mat-hint>
+    </mat-form-field>
+  </form>
+</ng-template>

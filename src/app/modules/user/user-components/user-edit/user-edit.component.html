@@ -1,0 +1,113 @@
+<!--<p>user-edit works!</p>-->
+<mat-toolbar color="primary" class="menu-toolbar">
+  <button mat-button *ngIf="sidenav.mode==='over'" (click)="sidenav.toggle()">
+    <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
+    <mat-icon *ngIf="sidenav.opened">close</mat-icon>
+  </button>
+  <span style="color: yellow">Users</span>
+  <div *ngIf="sidenav.mode ==='side'">
+    <button mat-button style="color: yellow">
+      <mat-icon>home</mat-icon>
+      <a routerLink="" routerLinkActive="" class="link-toolbar">
+        admin
+      </a>
+    </button>
+    <button mat-button>
+      <a routerLink="/user" class="link-toolbar">All users</a>
+    </button>
+  </div>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav="matSidenav" mode="side" opened class="side-menu">
+    <div *ngIf="sidenav.mode==='over'">
+      <button mat-button [matMenuTriggerFor]="sideMenu">
+        TOP MENU
+        <mat-menu #sideMenu>
+          <button mat-menu-item>
+            <a routerLink="" routerLinkActive="" class="link-toolbar">
+              <mat-icon>home</mat-icon>
+            </a>
+          </button>
+        </mat-menu>
+      </button>
+    </div>
+    <ng-container *ngTemplateOutlet="userEditMenu"></ng-container>
+  </mat-sidenav>
+<!--  /************************************ sidenav-content *****************************/-->
+  <mat-sidenav-content class="sidenav-content">
+    <div *ngIf="selectedUser" style="width: 20%">
+      <ng-container *ngTemplateOutlet="userCardContent"></ng-container>
+    </div>
+    <div *ngIf="preview" style="margin-left: 150px; margin-top: 150px">
+      <img [src]=sourcePhotoFile alt="User photo" width="200px">
+      <div style="display: flex; justify-content: space-between">
+        <button mat-button color="gray" (click)="onSaveUserPhoto()">Save</button>
+        <button mat-button color="gray" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<!--/*================================================= TEMPLATES================================ */-->
+<!--/*************************************************side menu **********************************/-->
+<ng-template #userEditMenu></ng-template>
+<!--/************************************************* content ***********************************/-->
+<ng-template #userCardContent>
+  <mat-card>
+    <mat-card-header>
+      <img mat-card-avatar
+           [src] = selectedUser.photoSRC alt="User photo" width="200px">
+      <mat-card-title>{{selectedUser.name}} {{selectedUser.surname}}</mat-card-title>
+      <mat-card-subtitle>{{selectedUser.role}}</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image
+         [src] = selectedUser.photoSRC alt="User photo" width="200px">
+    <mat-card-content>
+      <p> age: {{selectedUser.age}}</p>
+      <p>phone: {{selectedUser.phone}}</p>
+      <p>status: {{selectedUser.status}}</p>
+      <p>since: {{selectedUser.createdAt | date}}</p>
+
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button color="gray" (click)="onChangeRole()">Role/Status</button>
+      <button mat-button color="gray" (click)="onChangeAddPhoto()">Photo</button>
+    </mat-card-actions>
+  </mat-card>
+  <div *ngIf="roleChange">
+    <fieldset>
+      <legend>Edit user</legend>
+      <form [formGroup]="userEditForm">
+        <mat-form-field appearance="fill">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="role">
+            <mat-option *ngFor="let item of roles" [value]="item">
+              {{item}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option *ngFor="let item of statuses" [value]="item">
+              {{item}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div style="display: flex;justify-content: space-between">
+          <button mat-button color="gray" (click)="onSubmitUserEditForm()">Save</button>
+          <button mat-button color="gray" (click)="onCancel()">Cancel</button>
+        </div>
+    </form>
+    </fieldset>
+  </div>
+  <div *ngIf="addPhoto">
+    <fieldset>
+      <legend>Add photo</legend>
+      <form>
+        <input type="file" (change)="onChangeUserPhoto($event)">
+    </form>
+      <button mat-button color="gray" (click)="onCancel()">Cancel</button>
+    </fieldset>
+  </div>
+</ng-template>
+

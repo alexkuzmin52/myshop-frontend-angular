@@ -1,39 +1,68 @@
 <!--  /======================================== TOOLBAR =======================================/-->
-<mat-toolbar color="primary">
-  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
-    <mat-icon *ngIf="!sidenav.opened">
-      menu
-    </mat-icon>
-    <mat-icon *ngIf="sidenav.opened">
-      close
-    </mat-icon>
+<mat-toolbar class="menu-toolbar">
+  <button mat-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+    <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
+    <mat-icon *ngIf="sidenav.opened">close</mat-icon>
   </button>
   <span style="color: yellow">Product</span>
-  <button mat-button (click)="onHome()">Home</button>
-  <button mat-button (click)="onProductCreate()">Create</button>
-  <button mat-raised-button color="primary" (click)="onGetAllPhotos()">Photo</button>
+  <div *ngIf="sidenav.mode === 'side'">
+    <button mat-button>
+      <a routerLink="" routerLinkActive="" class="link-toolbar">
+      <span>
+        <mat-icon style="position: relative;top: .3rem">home</mat-icon>
+        Admin
+      </span>
+      </a>
+    </button>
+    <button mat-button (click)="onProductCreate()">
+      <span class="link-toolbar">create</span>
+    </button>
+  </div>
 </mat-toolbar>
 
-<app-product-filter-chips [filters]='productFilterArray'
-                          (removeElemFilters)="onRemoveElemFilters($event)"
-                          (clearFilters) = "onCancelFilters()"
->app-product-filter-chips
-</app-product-filter-chips>
+<!--<app-user-filter-chips [filters]='productFilterArray'-->
+<!--                          (removeElemFilters)="onRemoveElemFilters($event)"-->
+<!--                          (clearFilters)="onCancelFilters()">-->
+<!--</app-user-filter-chips>-->
 
 <!--  /======================================== SIDE-NAV-CONTAINER ============================/-->
-<div class="container">
-</div>
 <mat-sidenav-container>
   <!--  /************************************ sidenav *************************************/-->
   <mat-sidenav mode="side" #sidenav="matSidenav" class="side-menu" opened>
+    <div *ngIf="sidenav.mode === 'over'">
+      <button mat-button [matMenuTriggerFor]="sideMenu">
+        TOP MENU
+        <mat-menu #sideMenu>
+          <button mat-menu-item>
+            <a routerLink="" routerLinkActive="" class="link-toolbar" style="color: darkblue">
+      <span>
+        <mat-icon style="position: relative">home</mat-icon>
+<!--        home-->
+      </span>
+            </a>
+          </button>
+          <button mat-menu-item (click)="onProductCreate()" class="link-toolbar" style="color: darkblue">
+            Create
+          </button>
+        </mat-menu>
+      </button>
+    </div>
     <ng-container *ngTemplateOutlet="productEditMenu"></ng-container>
   </mat-sidenav>
   <!--  /************************************ sidenav-content *****************************/-->
   <mat-sidenav-content class="sidenav">
-    <div fxHide.lt-md>
-      <span class="column-label">Columns</span>
-      <mat-slider [max]="6" [min]="3" [(ngModel)]="gridColumns" [thumbLabel]="true">
-      </mat-slider>
+    <div >
+      <app-product-filter-chips [filters]='productFilterArray'
+                                (removeElemFilters)="onRemoveElemFilters($event)"
+                                (clearFilters)="onCancelFilters()">
+      </app-product-filter-chips>
+
+      <div fxHide.lt-md style="float: right">
+        <span class="column-label">Columns</span>
+        <mat-slider [max]="6" [min]="3" [(ngModel)]="gridColumns" [thumbLabel]="true">
+        </mat-slider>
+      </div>
+
     </div>
     <ng-container *ngTemplateOutlet="productCard"></ng-container>
 
@@ -74,7 +103,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill" style="font-size: 14px"
                       hintLabel="Min {{minMaxPrice.min}}, Max {{minMaxPrice.max}}">
-        <mat-label>From maximum price</mat-label>
+        <mat-label>To maximum price</mat-label>
         <input matInput formControlName="priceLte" (blur)="onChangeProductFilterFormPriceLte()" #priceLte>
         <mat-hint align="end">
           {{ priceLte.value || 0}}
@@ -102,10 +131,11 @@
         <mat-card>
           <div class="card_header">
             <div *ngIf="item.newFlag">
-              <img mat-card-avatar src="assets/images/New%20product30_30.png" style="width: 30px;height: 30px">
+              <img mat-card-avatar src="../../../../../assets/images/New%20product30_30.png"
+                   style="width: 30px;height: 30px">
             </div>
             <div *ngIf="item.promoFlag">
-              <img mat-card-avatar src="assets/images/promo.jpeg" style="width: 30px;height: 30px">
+              <img mat-card-avatar src="../../../../../assets/images/promo.jpeg" style="width: 30px;height: 30px">
             </div>
           </div>
           <div style="width: 100%; height: 200px">

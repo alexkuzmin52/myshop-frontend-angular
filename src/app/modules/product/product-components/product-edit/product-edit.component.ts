@@ -8,7 +8,7 @@ import {MatSidenav} from "@angular/material/sidenav";
 import {Subject} from "rxjs";
 import {delay, map, takeUntil} from "rxjs/operators";
 
-import {ICategory, ISubCategory, ISubSubCategory} from "../../../category/category-models";
+import {ICategory, ISubCategory, ISubSubCategory} from "../../../category";
 import {IProduct} from "../../product-models";
 import {ProductForm} from "../../product-form";
 import {ProductService} from "../../product-services";
@@ -223,7 +223,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.addPhotos(this.photos, this.selectedProduct.id, this.token)
       // .pipe(takeUntil(this.destroy$))
       .subscribe(res => {
-          // console.log(res);
+          console.log(res);
         },
         error => {
           console.log(error.error.message);
@@ -244,6 +244,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
       // console.log('*******************************************************');
       // console.log(this.selectedProduct.photo.length);
       // console.log(this.selectedProduct.photo[i]);
+      //TODO нужен ли pipe ?
       this.productService.getProductPhotos(this.selectedProduct.id, this.selectedProduct.photo[i])
         .pipe(takeUntil(this.destroy$)).subscribe(res => {
           this.src = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(res));

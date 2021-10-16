@@ -1,0 +1,28 @@
+.link-toolbar {
+  color: white;
+  font-size: 1.2rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: normal;
+}
+
+.side-menu {
+  width: 150px;
+  background-color: #41aef8;
+  color: white;
+}
+
+mat-sidenav-container {
+  height: calc(100vh - 40px);
+}
+
+.menu-toolbar {
+  background-color: #00aff8;
+  height: 40px;
+}
+
+.wrapper-sidenav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+ }

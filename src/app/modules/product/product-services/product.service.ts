@@ -2,9 +2,9 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 
-import {CategoryUrlEnum} from "../../category/constants";
-import {HeaderRequestEnum} from "../product-constants";
-import {ICategory, ISubCategory, ISubSubCategory} from "../../category/category-models";
+import {CategoryUrlEnum} from "../../category";
+import {HeaderRequestEnum} from "../product-constants/header-request-enum";
+import {ICategory, ISubCategory, ISubSubCategory} from "../../category";
 import {IProduct} from "../product-models";
 import {ProductUrlEnum} from "../product-constants";
 

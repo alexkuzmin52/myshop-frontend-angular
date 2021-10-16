@@ -1,5 +1,5 @@
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {RegexEnum} from "../category/constants";
+import {RegexEnum} from "../category";
 
 export class ProductForm {
   productForm: FormGroup;

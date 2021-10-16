@@ -12,15 +12,18 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatSelectModule} from "@angular/material/select";
 import {MatToolbarModule} from "@angular/material/toolbar";
 
-import { CategoryComponent } from './category-components/category/category.component';
+import { CategoryComponent } from './category-components';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatGridListModule} from "@angular/material/grid-list";
+// import {CommonMenuComponent} from "../menu/menu-component/menu.component";
+// import {MenuModule} from "../menu/menu.module";
 
 @NgModule({
   declarations: [
     CategoryComponent,
+    // CommonMenuComponent
   ],
   imports: [
     CommonModule,
@@ -40,7 +43,9 @@ import {MatGridListModule} from "@angular/material/grid-list";
     MatSidenavModule,
     MatIconModule,
     MatDividerModule,
-    MatGridListModule
+    MatGridListModule,
+
+    // MenuModule
   ]
 })
 export class CategoryModule { }

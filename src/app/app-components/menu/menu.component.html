@@ -1,0 +1,45 @@
+<mat-toolbar class="menu-toolbar">
+  <button mat-button *ngIf="sidenav.mode === 'side'" (click)="sidenav.toggle()">
+    <mat-icon *ngIf="!sidenav.opened"> menu</mat-icon>
+    <mat-icon *ngIf="sidenav.opened"> close</mat-icon>
+  </button>
+  <div>
+    <button mat-button>
+      <a routerLink="" routerLinkActive="" class="link-toolbar">
+        <span style="color: yellow">
+        <mat-icon style="position: relative;top:.3rem">home</mat-icon>
+        Admin</span>
+      </a>
+    </button>
+  </div>
+  <div *ngIf="sidenav.mode === 'over'">
+    <button mat-button>
+      <a routerLink="category" routerLinkActive="" class="link-toolbar"><span>Categories</span></a>
+    </button>
+    <button mat-button>
+      <a routerLink="product" routerLinkActive="" class="link-toolbar"><span>Products</span></a>
+    </button>
+    <button mat-button>
+      <a routerLink="user" routerLinkActive="" class="link-toolbar"><span>Users</span></a>
+    </button>
+  </div>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav mode="over" #sidenav="matSidenav" class="side-menu" opened>
+    <div class="wrapper-sidenav">
+      <button mat-button>
+        <a routerLink="category" routerLinkActive="" class="link-toolbar"><span>Categories</span></a>
+      </button>
+      <button mat-button>
+        <a routerLink="product" routerLinkActive="" class="link-toolbar"><span>Products</span></a>
+      </button>
+      <button mat-button>
+        <a routerLink="user" routerLinkActive="" class="link-toolbar"><span>Users</span></a>
+      </button>
+
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

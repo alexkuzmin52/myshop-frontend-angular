@@ -1,7 +1,7 @@
 <mat-form-field class="filter-product-chip-list" appearance="fill">
   <mat-label>Filters products</mat-label>
   <mat-chip-list #chipList aria-label="Filter selection">
-    <mat-chip (click)="onClearAllFilters()">Clear</mat-chip>
+<!--    <mat-chip (click)="onClearAllFilters()">Clear</mat-chip>-->
     <mat-chip
       *ngFor="let filter of filters"
       [selectable]="selectable"

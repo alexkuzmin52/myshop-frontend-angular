@@ -8,11 +8,11 @@ import {Subject} from "rxjs";
 import {delay, takeUntil} from "rxjs/operators";
 
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ICategory, ISubCategory, ISubSubCategory} from "../../../../category/category-models";
-import {IProductFilterQuery} from "../../../product-models";
-import {IProduct} from "../../../product-models";
-import {ProductService} from "../../../product-services";
-import {minMaxProductPriceHelper} from "../../../product-helpers";
+import {ICategory, ISubCategory, ISubSubCategory} from "../../../category";
+import {IProductFilterQuery} from "../../product-models";
+import {IProduct} from "../../product-models";
+import {ProductService} from "../../product-services";
+import {minMaxProductPriceHelper} from "../../product-helpers";
 
 @Component({
   selector: 'app-product-home',
@@ -192,6 +192,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onChangeProductFilterForm();
   }
 
+  // TODO корректировать priceGte, priceLte как в userComponent
   onRemoveElemFilters(event: string) {
     switch (event[0]) {
       case 'category':

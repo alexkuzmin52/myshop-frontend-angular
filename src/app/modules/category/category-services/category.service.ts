@@ -5,8 +5,8 @@ import {Observable} from "rxjs";
 import {CategoryUrlEnum} from "../constants";
 import {HeaderRequestEnum} from "../constants";
 import {ICategory, ISubCategory, ISubSubCategory} from "../category-models";
-import {IProduct} from "../../product/product-models/product-interface";
-import {ProductUrlEnum} from "../../product/product-constants";
+import {IProduct} from "../../product";
+import {ProductUrlEnum} from "../../product";
 
 @Injectable({
   providedIn: 'root'

@@ -6,14 +6,14 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatSidenav} from "@angular/material/sidenav";
 import {delay} from "rxjs/operators";
 
-import {ICategory, ISubCategory, ISubSubCategory} from "../../../category/category-models";
+import {ICategory, ISubCategory, ISubSubCategory} from "../../../category";
 import {IProductFilter} from "../../product-models";
 import {IProduct} from "../../product-models";
 import {ProductActionEnum} from "../../product-constants";
 import {ProductMenuActionEnum} from "../../product-constants";
 import {ProductService} from "../../product-services";
 import {ProductTypeEnum} from "../../product-constants";
-import {RegexEnum} from "../../../category/constants";
+import {RegexEnum} from "../../../category";
 import {countriesList} from '../../countries-list';
 import {MatSelectChange} from "@angular/material/select";
 

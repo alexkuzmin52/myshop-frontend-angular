@@ -1,15 +1,14 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreloadAllModules, RouterModule, Routes} from "@angular/router";
-import {AppComponent} from "../app-components/app/app.component";
-import {HomeComponent} from "../app-components/home/home.component";
-import {NotFoundComponent} from "../app-components/not-found/not-found.component";
+import {NotFoundComponent} from "../app-components";
+import {MenuComponent} from "../app-components";
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: MenuComponent},
   {path: 'category', loadChildren: () => import('../modules/category/category.module').then(m => m.CategoryModule)},
   {path: 'product', loadChildren: () => import('../modules/product/product.module').then(m => m.ProductModule)},
-
+  {path: 'user', loadChildren: () => import('../modules/user/user.module').then(m => m.UserModule)},
   {path: '**', component: NotFoundComponent}
 ]
 
@@ -23,5 +22,4 @@ const routes: Routes = [
     RouterModule
   ]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

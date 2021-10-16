@@ -1,25 +1,103 @@
 <!--  /======================================== TOOLBAR =======================================/-->
-<mat-toolbar color="primary">
-  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
-    <mat-icon *ngIf="!sidenav.opened">
-      menu
-    </mat-icon>
-    <mat-icon *ngIf="sidenav.opened">
-      close
-    </mat-icon>
+<!--<app-common-menu></app-common-menu>-->
+
+
+<!--<mat-toolbar color="primary">-->
+<!--  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">-->
+<!--    <mat-icon *ngIf="!sidenav.opened">-->
+<!--      menu-->
+<!--    </mat-icon>-->
+<!--    <mat-icon *ngIf="sidenav.opened">-->
+<!--      close-->
+<!--    </mat-icon>-->
+<!--  </button>-->
+<!--  <span style="color: yellow">Категории</span>-->
+<!--  <button mat-button (click)="onHome()">Home</button>-->
+<!--  <button mat-button (click)="onCreateMenu()">Create</button>-->
+<!--  <button mat-button (click)="onAddMenu()">Add</button>-->
+<!--  <button mat-button (click)="onEditMenu()">Edit</button>-->
+<!--</mat-toolbar>-->
+
+<mat-toolbar class="menu-toolbar">
+  <button mat-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+    <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
+    <mat-icon *ngIf="sidenav.opened">close</mat-icon>
   </button>
-  <span style="color: yellow">Категории</span>
-  <button mat-button (click)="onHome()">Home</button>
-  <button mat-button (click)="onCreateMenu()">Create</button>
-  <button mat-button (click)="onAddMenu()">Add</button>
-  <button mat-button (click)="onEditMenu()">Edit</button>
+  <span style="color: yellow">Categories</span>
+  <div *ngIf="sidenav.mode === 'side'">
+    <button mat-button>
+      <a routerLink="" routerLinkActive="" class="link-toolbar">
+      <span>
+        <mat-icon style="position: relative;top: .3rem">home</mat-icon>
+        Admin
+      </span>
+      </a>
+    </button>
+    <button mat-button (click)="onCreateMenu()">
+      <span class="link-toolbar">create</span>
+    </button>
+    <button mat-button (click)="onAddMenu()">
+      <span class="link-toolbar">add</span>
+    </button>
+    <button mat-button (click)="onEditMenu()">
+      <span class="link-toolbar">edit</span>
+    </button>
+  </div>
 </mat-toolbar>
+
 <!--  /======================================== SIDE-NAV-CONTAINER ============================/-->
-<div class="container">
-    <div>
+<!--<div class="container">-->
+  <div>
     <mat-sidenav-container>
       <!--  /************************************ sidenav *************************************/-->
       <mat-sidenav mode="side" #sidenav="matSidenav" class="side-menu" opened>
+
+        <div *ngIf="sidenav.mode === 'over'">
+          <button mat-button [matMenuTriggerFor]="sideMenu">
+            TOP MENU
+            <mat-menu #sideMenu>
+              <button mat-menu-item>
+                <a routerLink="" routerLinkActive="" class="link-toolbar" style="color: darkblue">
+              <span>
+              <mat-icon style="position: relative">home</mat-icon>
+                <!--        home-->
+              </span>
+                </a>
+              </button>
+              <button mat-menu-item (click)="onCreateMenu()" class="link-toolbar" style="color: darkblue">
+                create
+              </button>
+              <button mat-menu-item (click)="onAddMenu()" class="link-toolbar" style="color: darkblue">
+                add
+              </button>
+              <button mat-menu-item (click)="onEditMenu()" class="link-toolbar" style="color: darkblue">
+                edit
+              </button>
+            </mat-menu>
+          </button>
+        </div>
+
+
+        <!--        <div *ngIf="sidenav.mode === 'over'">-->
+        <!--          <div>-->
+        <!--            <button mat-button (click)="onHome()">Home</button>-->
+
+        <!--          </div>-->
+        <!--          <div>-->
+        <!--            <button mat-button (click)="onCreateMenu()">Create</button>-->
+
+        <!--          </div>-->
+        <!--          <div>-->
+        <!--            <button mat-button (click)="onAddMenu()">Add</button>-->
+
+        <!--          </div>-->
+        <!--          <div>-->
+        <!--            <button mat-button (click)="onEditMenu()">Edit</button>-->
+
+        <!--          </div>-->
+        <!--        </div>-->
+        <!--        <div *ngIf="sidenav.mode === 'side'"></div>-->
+
         <div *ngIf="categoryMenuAction === 'create'">
           <ng-container *ngTemplateOutlet="createCategoryMenu"></ng-container>
         </div>
@@ -137,7 +215,7 @@
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>
-</div>
+<!--</div>-->
 <!--  /========================================== TEMPLATES ===================================/-->
 <!--  /****************************************** create categories form **********************/-->
 <ng-template #createCategoryForms let-active="active">
@@ -245,13 +323,14 @@
   <div>
     <button mat-button class="menu-button" (click)="onAddSubCategoryToCategory()">SubCategory to Category</button>
     <mat-divider></mat-divider>
-    <button mat-button class="menu-button" (click)="onAddSubSubCategoryToSubCategory()">SubSubCategory to SubCategory</button>
+    <button mat-button class="menu-button" (click)="onAddSubSubCategoryToSubCategory()">SubSubCategory to SubCategory
+    </button>
     <mat-divider></mat-divider>
   </div>
 </ng-template>
 <!--  /****************************************** edit category side menu *********************/-->
 <ng-template #editCategoryMenu>
-<!--  <div class="category-list">-->
+  <!--  <div class="category-list">-->
   <div>
     <div *ngFor="let cat of categories">
       <div>
@@ -283,23 +362,23 @@
 </ng-template>
 <!--  /****************************************** edit category side menu *********************/-->
 <ng-template #createCategoriesCSV let-active="active">
-    <fieldset>
-      <legend>{{active}}</legend>
-      <form [formGroup]="createCategoriesCSVForm">
-        <legend>Create categories from csv file</legend>
-        <mat-form-field appearens="fill">
-          <mat-label>Csv file</mat-label>
-          <input matInput placeholder="file" formControlName="file_name">
-        </mat-form-field>
-        <div>
-          <input type="file" multiple (change)="onChangeCsvFile($event)">
-        </div>
-        <br>
-        <div>
-          <button mat-raised-button color="primary" (click)="onSubmitCreateCategoriesCSVForm()">Submit</button>
-        </div>
-      </form>
-    </fieldset>
-<!--  </div>-->
+  <fieldset>
+    <legend>{{active}}</legend>
+    <form [formGroup]="createCategoriesCSVForm">
+      <legend>Create categories from csv file</legend>
+      <mat-form-field appearens="fill">
+        <mat-label>Csv file</mat-label>
+        <input matInput placeholder="file" formControlName="file_name">
+      </mat-form-field>
+      <div>
+        <input type="file" multiple (change)="onChangeCsvFile($event)">
+      </div>
+      <br>
+      <div>
+        <button mat-raised-button color="primary" (click)="onSubmitCreateCategoriesCSVForm()">Submit</button>
+      </div>
+    </form>
+  </fieldset>
+  <!--  </div>-->
 </ng-template>
 

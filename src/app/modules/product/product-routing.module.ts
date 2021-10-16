@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {ProductComponent} from "./product-components/product/product.component";
-import {GetProductsResolverService} from "./product-resolvers/get-products-resolver.service";
-import {ProductHomeComponent} from "./product-components/product-home/product-home/product-home.component";
-import {ProductCreateComponent} from "./product-components/product-create/product-create.component";
-import {ProductEditComponent} from "./product-components/product-edit/product-edit.component";
+import {GetProductsResolverService} from "./product-resolvers";
+import {ProductHomeComponent} from "./product-components";
+import {ProductCreateComponent} from "./product-components";
+import {ProductEditComponent} from "./product-components";
+import {AppComponent} from "../../app-components";
 
 const routes: Routes = [
   // {path: '', component: ProductComponent, resolve: {data: GetProductsResolverService}},
