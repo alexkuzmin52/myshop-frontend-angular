@@ -38,7 +38,7 @@ export class UserEditComponent implements OnInit, OnDestroy, AfterViewInit {
   roles: Array<string>;
   statuses: Array<string>;
 
-  token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjgzMTY1NDUsImV4cCI6MTYzNjk1NjU0NX0.0B0nGk9yZZc2zO0Butx8J6ugMFkc_ddhi1Hwe-UobjE';
+  token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NTY1Mjc5MjYsImV4cCI6MTc0MjkyNzkyNn0.eqQAtFYCXSSaPQTyST0uIitRavY8Ga8P0MnzHq3cewI';
 
   constructor(private userService: UserService,
               private router: Router,

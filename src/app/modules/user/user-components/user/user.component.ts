@@ -74,6 +74,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.userFilterForm.valueChanges
       .pipe(takeUntil(this.destroy$))
+      // TODO .pipe(delay(1))
       .subscribe(res => {
         this.userFilter = Object.fromEntries(Object.entries(res).filter(([k, v]) => v !== '' && v !== null));
       })
